@@ -1,21 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="离线可用的通用算法工具箱：在线计算模拟器与 C++ 算法模板库。">
+  <title>AlgoToolbox · 通用算法工具箱</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f2f5f9;
+      --panel: #ffffff;
+      --panel-soft: #f7f9fc;
+      --panel-strong: #eef3f8;
+      --text: #172033;
+      --muted: #69758a;
+      --muted-2: #94a0b3;
+      --border: #dfe6ef;
+      --border-strong: #ccd6e3;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: #eaf1ff;
+      --accent-ink: #1647b8;
+      --teal: #0f9f87;
+      --teal-soft: #e5f8f4;
+      --danger: #d34242;
+      --danger-soft: #fdf0f0;
+      --code-bg: #111827;
+      --code-bg-soft: #172033;
+      --code-text: #dbe6f5;
+      --shadow-sm: 0 1px 2px rgba(25, 40, 65, 0.05), 0 4px 14px rgba(25, 40, 65, 0.04);
+      --shadow-lg: 0 24px 70px rgba(15, 28, 51, 0.18);
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 18px;
+      --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0b1018;
+      --panel: #111923;
+      --panel-soft: #151f2b;
+      --panel-strong: #1a2634;
+      --text: #e6edf6;
+      --muted: #94a2b6;
+      --muted-2: #69798f;
+      --border: #243242;
+      --border-strong: #334559;
+      --accent: #5b8df7;
+      --accent-hover: #7aa3fb;
+      --accent-soft: #17284a;
+      --accent-ink: #a9c3ff;
+      --teal: #3ac7ab;
+      --teal-soft: #102e2a;
+      --danger: #f07070;
+      --danger-soft: #341c20;
+      --code-bg: #080d14;
+      --code-bg-soft: #0d1520;
+      --code-text: #dbe6f5;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 5% -5%, rgba(37, 99, 235, 0.09), transparent 28rem),
+        radial-gradient(circle at 95% 8%, rgba(15, 159, 135, 0.06), transparent 26rem),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    button,
+    summary {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    :focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 38%, transparent);
+      outline-offset: 2px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+      background: color-mix(in srgb, var(--panel) 88%, transparent);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      width: min(1520px, calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 11px;
+      min-width: max-content;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+      border-radius: 11px;
+      color: #fff;
+      background: linear-gradient(145deg, #3578f6, #1449bb);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.24);
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      padding-right: 2px;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 760;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      margin-top: -2px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .main-tabs {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      gap: 4px;
+    }
+
+    .main-tab {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: max-content;
+      border: 0;
+      padding: 0 15px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 630;
+      transition: color 160ms ease;
+    }
+
+    .main-tab::after {
+      position: absolute;
+      right: 12px;
+      bottom: -1px;
+      left: 12px;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+      background: var(--accent);
+      content: "";
+      opacity: 0;
+      transform: scaleX(0.35);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .main-tab:hover {
+      color: var(--text);
+    }
+
+    .main-tab[aria-selected="true"] {
+      color: var(--accent-ink);
+    }
+
+    .main-tab[aria-selected="true"]::after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .tab-icon {
+      width: 17px;
+      height: 17px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-left: auto;
+    }
+
+    .local-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid color-mix(in srgb, var(--teal) 24%, var(--border));
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      font-size: 11px;
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--teal) 13%, transparent);
+    }
+
+    .icon-button {
+      display: inline-grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      background: var(--panel);
+      cursor: pointer;
+      transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .icon-button:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--panel-soft);
+    }
+
+    .icon-button svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .page-wrap {
+      width: min(1520px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 27px 0 36px;
+    }
+
+    .view {
+      animation: view-in 220ms ease both;
+    }
+
+    @keyframes view-in {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 21px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
       color: var(--accent);
       font-size: 11px;
       font-weight: 760;
       letter-spacing: 0.13em;
       text-transform: uppercase;
     }
+
     .eyebrow::before {
       width: 19px;
       height: 1px;
       background: currentColor;
       content: "";
     }
+
     h1,
     h2,
     h3,
     p {
       margin-top: 0;
     }
+
     .page-heading h1 {
       margin-bottom: 5px;
       font-size: clamp(23px, 2.2vw, 31px);
@@ -23,17 +346,20 @@
       letter-spacing: -0.04em;
       line-height: 1.2;
     }
+
     .page-heading p {
       max-width: 720px;
       margin-bottom: 0;
       color: var(--muted);
       font-size: 13px;
     }
+
     .heading-stats {
       display: flex;
       flex: 0 0 auto;
       gap: 10px;
     }
+
     .stat-tile {
       min-width: 92px;
       border: 1px solid var(--border);
@@ -42,34 +368,40 @@
       background: color-mix(in srgb, var(--panel) 86%, transparent);
       box-shadow: var(--shadow-sm);
     }
+
     .stat-tile strong {
       display: block;
       font-family: var(--mono);
       font-size: 18px;
       line-height: 1.25;
     }
+
     .stat-tile span {
       color: var(--muted);
       font-size: 10px;
       letter-spacing: 0.06em;
     }
+
     .sim-layout {
       display: grid;
       grid-template-columns: minmax(270px, 320px) minmax(0, 1fr);
       gap: 17px;
       align-items: start;
     }
+
     .panel {
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       background: var(--panel);
       box-shadow: var(--shadow-sm);
     }
+
     .catalog-panel {
       position: sticky;
       top: 91px;
       overflow: hidden;
     }
+
     .panel-head {
       display: flex;
       align-items: center;
@@ -78,24 +410,29 @@
       border-bottom: 1px solid var(--border);
       padding: 16px 17px 13px;
     }
+
     .panel-title {
       margin: 0;
       font-size: 13px;
       font-weight: 740;
       letter-spacing: -0.01em;
     }
+
     .count-label {
       color: var(--muted);
       font-family: var(--mono);
       font-size: 10px;
     }
+
     .catalog-controls {
       padding: 13px 14px 10px;
     }
+
     .search-box {
       position: relative;
       display: block;
     }
+
     .search-box svg {
       position: absolute;
       top: 50%;
@@ -106,6 +443,7 @@
       transform: translateY(-50%);
       pointer-events: none;
     }
+
     .search-box input {
       width: 100%;
       height: 38px;
@@ -118,14 +456,17 @@
       font-size: 12px;
       transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
     }
+
     .search-box input::placeholder {
       color: var(--muted-2);
     }
+
     .search-box input:focus {
       border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
       background: var(--panel);
       box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
     }
+
     .clear-search {
       position: absolute;
       top: 50%;
@@ -141,13 +482,16 @@
       cursor: pointer;
       transform: translateY(-50%);
     }
+
     .clear-search:hover {
       color: var(--text);
       background: var(--panel-strong);
     }
+
     .clear-search.visible {
       display: grid;
     }
+
     .filter-pills {
       display: flex;
       overflow-x: auto;
@@ -155,12 +499,3979 @@
       padding: 11px 14px 12px;
       scrollbar-width: none;
     }
+
     .filter-pills::-webkit-scrollbar {
       display: none;
     }
+
     .filter-pill {
       flex: 0 0 auto;
       border: 1px solid transparent;
       border-radius: 7px;
       padding: 5px 8px;
       color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 10.5px;
+      font-weight: 630;
+      white-space: nowrap;
+    }
+
+    .filter-pill:hover {
+      color: var(--text);
+      background: var(--panel-soft);
+    }
+
+    .filter-pill.active {
+      border-color: color-mix(in srgb, var(--accent) 20%, var(--border));
+      color: var(--accent-ink);
+      background: var(--accent-soft);
+    }
+
+    .algorithm-list {
+      max-height: calc(100vh - 288px);
+      min-height: 250px;
+      overflow-y: auto;
+      padding: 2px 8px 9px;
+      border-top: 1px solid var(--border);
+      scrollbar-color: var(--border-strong) transparent;
+      scrollbar-width: thin;
+    }
+
+    .algorithm-item {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 9px;
+      text-align: left;
+      background: transparent;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
+
+    .algorithm-item + .algorithm-item {
+      margin-top: 2px;
+    }
+
+    .algorithm-item:hover {
+      background: var(--panel-soft);
+    }
+
+    .algorithm-item.active {
+      border-color: color-mix(in srgb, var(--accent) 18%, var(--border));
+      background: var(--accent-soft);
+    }
+
+    .alg-symbol {
+      display: grid;
+      flex: 0 0 33px;
+      width: 33px;
+      height: 33px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--muted);
+      background: var(--panel);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 740;
+    }
+
+    .algorithm-item.active .alg-symbol {
+      border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
+      color: var(--accent);
+      background: var(--panel);
+    }
+
+    .alg-copy {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .alg-name {
+      overflow: hidden;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .alg-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9.5px;
+    }
+
+    .category-mini {
+      color: var(--accent);
+      font-weight: 660;
+    }
+
+    .alg-chevron {
+      color: var(--muted-2);
+      font-size: 15px;
+      transition: transform 150ms ease;
+    }
+
+    .algorithm-item.active .alg-chevron {
+      color: var(--accent);
+      transform: translateX(2px);
+    }
+
+    .empty-list {
+      padding: 35px 18px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .catalog-footer {
+      border-top: 1px solid var(--border);
+      padding: 10px 14px 12px;
+    }
+
+    .text-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      padding: 3px 0;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 620;
+    }
+
+    .text-button:hover {
+      color: var(--accent);
+    }
+
+    .workbench {
+      min-width: 0;
+    }
+
+    .workbench-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 22px 18px;
+    }
+
+    .workbench-title-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .workbench h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 780;
+      letter-spacing: -0.03em;
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+      border-radius: 999px;
+      padding: 3px 8px;
+      color: var(--accent-ink);
+      background: var(--accent-soft);
+      font-size: 9.5px;
+      font-weight: 720;
+      letter-spacing: 0.04em;
+    }
+
+    .workbench-desc {
+      max-width: 660px;
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .workbench-aside {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .complexity {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 4px 7px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      font-family: var(--mono);
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
+
+    .small-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 9px;
+      color: var(--muted);
+      background: var(--panel);
+      cursor: pointer;
+      font-size: 10.5px;
+      font-weight: 620;
+      transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+
+    .small-button:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--panel-soft);
+    }
+
+    .small-button svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .workbench-body {
+      display: grid;
+      grid-template-columns: minmax(300px, 0.92fr) minmax(330px, 1.08fr);
+      gap: 0;
+    }
+
+    .form-pane {
+      min-width: 0;
+      padding: 20px 22px 22px;
+      border-right: 1px solid var(--border);
+    }
+
+    .section-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 740;
+    }
+
+    .section-kicker span {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 500;
+    }
+
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .field small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1.4;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--text);
+      outline: none;
+      background: var(--panel-soft);
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+    }
+
+    .field input {
+      height: 37px;
+    }
+
+    .field textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+      background: var(--panel);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 9%, transparent);
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 17px;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      min-height: 38px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 8px 15px;
+      color: #fff;
+      background: linear-gradient(180deg, #3678f5, #215ee0);
+      box-shadow: 0 7px 16px rgba(37, 99, 235, 0.2);
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 700;
+      transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+    }
+
+    .primary-button:hover {
+      box-shadow: 0 9px 20px rgba(37, 99, 235, 0.27);
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .primary-button:active {
+      transform: translateY(0);
+    }
+
+    .primary-button:disabled {
+      cursor: wait;
+      filter: saturate(0.6);
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .primary-button svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .secondary-button {
+      display: inline-flex;
+      min-height: 38px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 12px;
+      color: var(--muted);
+      background: var(--panel);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 640;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+      background: var(--panel-soft);
+    }
+
+    .shortcut-hint {
+      margin-left: auto;
+      color: var(--muted-2);
+      font-size: 9px;
+      white-space: nowrap;
+    }
+
+    kbd {
+      display: inline-block;
+      border: 1px solid var(--border-strong);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      padding: 0 4px;
+      color: var(--muted);
+      background: var(--panel);
+      font-family: var(--mono);
+      font-size: 8.5px;
+      line-height: 1.6;
+    }
+
+    .result-pane {
+      min-width: 0;
+      padding: 20px 22px 22px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel-soft) 55%, var(--panel)), var(--panel));
+    }
+
+    .result-shell {
+      display: flex;
+      min-height: 298px;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .result-empty {
+      display: grid;
+      flex: 1;
+      min-height: 296px;
+      place-items: center;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .result-empty-icon {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 12px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      color: var(--muted-2);
+      background: var(--panel-soft);
+      font-family: var(--mono);
+      font-size: 15px;
+    }
+
+    .result-empty strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .result-empty p {
+      max-width: 290px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+
+    .result-content {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .result-topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .result-label {
+      color: var(--teal);
+      font-size: 9.5px;
+      font-weight: 760;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .result-time {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 9px;
+    }
+
+    .result-headline {
+      margin: 0 0 10px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: clamp(18px, 2vw, 25px);
+      font-weight: 650;
+      letter-spacing: -0.035em;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .result-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0 13px;
+    }
+
+    .result-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 4px 7px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      font-size: 9px;
+    }
+
+    .result-chip b {
+      color: var(--text);
+      font-family: var(--mono);
+      font-weight: 620;
+    }
+
+    .result-detail {
+      max-height: 240px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px 12px;
+      color: #ced9e8;
+      background: var(--code-bg);
+      font-family: var(--mono);
+      font-size: 10.5px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .result-error {
+      border: 1px solid color-mix(in srgb, var(--danger) 24%, var(--border));
+      border-radius: 10px;
+      padding: 14px;
+      color: var(--danger);
+      background: var(--danger-soft);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .result-error strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .result-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+      padding: 8px 12px;
+      background: var(--panel-soft);
+    }
+
+    .result-footer span {
+      color: var(--muted-2);
+      font-size: 9px;
+    }
+
+    .copy-result {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 0;
+      padding: 3px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 9.5px;
+      font-weight: 620;
+    }
+
+    .copy-result:hover {
+      color: var(--accent);
+    }
+
+    .copy-result svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .library-toolbar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      background: var(--panel);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .category-tabs {
+      display: flex;
+      min-width: 0;
+      flex: 1;
+      overflow-x: auto;
+      gap: 4px;
+      scrollbar-width: none;
+    }
+
+    .category-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-tab {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 640;
+      white-space: nowrap;
+    }
+
+    .category-tab:hover {
+      color: var(--text);
+      background: var(--panel-soft);
+    }
+
+    .category-tab.active {
+      border-color: color-mix(in srgb, var(--accent) 18%, var(--border));
+      color: var(--accent-ink);
+      background: var(--accent-soft);
+    }
+
+    .category-tab-count {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 8.5px;
+    }
+
+    .category-tab.active .category-tab-count {
+      color: var(--accent);
+    }
+
+    .library-search {
+      flex: 0 0 220px;
+    }
+
+    .add-template-button {
+      flex: 0 0 auto;
+    }
+
+    .library-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin: 17px 2px 10px;
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+
+    .library-meta strong {
+      color: var(--text);
+      font-weight: 680;
+    }
+
+    .template-groups {
+      display: grid;
+      gap: 25px;
+    }
+
+    .template-group-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 11px;
+    }
+
+    .category-mark {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border: 1px solid color-mix(in srgb, var(--accent) 16%, var(--border));
+      border-radius: 8px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 760;
+    }
+
+    .template-group-head h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 730;
+      letter-spacing: -0.015em;
+    }
+
+    .group-line {
+      height: 1px;
+      flex: 1;
+      background: var(--border);
+    }
+
+    .group-count {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 9px;
+    }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .template-card {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .template-card:hover {
+      border-color: color-mix(in srgb, var(--accent) 20%, var(--border));
+      box-shadow: 0 8px 28px rgba(25, 40, 65, 0.075);
+      transform: translateY(-1px);
+    }
+
+    .template-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 15px 10px;
+    }
+
+    .template-card h3 {
+      margin: 0 0 4px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 680;
+      letter-spacing: -0.02em;
+    }
+
+    .template-summary {
+      margin: 0;
+      color: var(--muted);
+      font-size: 10.5px;
+      line-height: 1.5;
+    }
+
+    .card-actions {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .copy-template {
+      display: inline-flex;
+      min-height: 29px;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+      border-radius: 7px;
+      padding: 4px 8px;
+      color: var(--accent-ink);
+      background: var(--accent-soft);
+      cursor: pointer;
+      font-size: 9.5px;
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .copy-template:hover {
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    }
+
+    .copy-template svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    .delete-template {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--muted);
+      background: var(--panel);
+      cursor: pointer;
+    }
+
+    .delete-template:hover {
+      border-color: color-mix(in srgb, var(--danger) 30%, var(--border));
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .delete-template svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .template-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 0 15px 11px;
+    }
+
+    .template-tag {
+      border-radius: 5px;
+      padding: 2px 6px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      font-family: var(--mono);
+      font-size: 8.5px;
+    }
+
+    .template-tag.complexity-tag {
+      color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .template-code {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+    }
+
+    .template-code summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 15px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      cursor: pointer;
+      font-size: 9.5px;
+      font-weight: 610;
+      list-style: none;
+      user-select: none;
+    }
+
+    .template-code summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .template-code summary::after {
+      color: var(--muted-2);
+      content: "⌄";
+      font-size: 13px;
+      transition: transform 150ms ease;
+    }
+
+    .template-code[open] summary::after {
+      transform: rotate(180deg);
+    }
+
+    .template-code pre {
+      max-height: 430px;
+      margin: 0;
+      overflow: auto;
+      padding: 14px 15px;
+      color: var(--code-text);
+      background: var(--code-bg);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.65;
+      tab-size: 4;
+      scrollbar-color: #3b4a5d #111827;
+      scrollbar-width: thin;
+    }
+
+    .template-code code {
+      font-family: inherit;
+      white-space: pre;
+    }
+
+    .tok-keyword {
+      color: #82aaff;
+    }
+
+    .tok-type {
+      color: #7fdbca;
+    }
+
+    .tok-string {
+      color: #c3e88d;
+    }
+
+    .tok-number {
+      color: #f78c6c;
+    }
+
+    .tok-comment {
+      color: #637777;
+      font-style: italic;
+    }
+
+    .tok-preproc {
+      color: #c792ea;
+    }
+
+    .tok-function {
+      color: #ffcb6b;
+    }
+
+    .add-template-slot {
+      display: flex;
+      min-height: 168px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 7px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--panel) 45%, transparent);
+      cursor: pointer;
+      text-align: center;
+      transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .add-template-slot:hover {
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .add-symbol {
+      display: grid;
+      width: 33px;
+      height: 33px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--panel);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .add-template-slot strong {
+      font-size: 11px;
+      font-weight: 660;
+    }
+
+    .add-template-slot span:last-child {
+      color: var(--muted-2);
+      font-size: 9.5px;
+    }
+
+    .empty-library {
+      display: grid;
+      min-height: 280px;
+      place-items: center;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--panel) 65%, transparent);
+      text-align: center;
+    }
+
+    .empty-library strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .empty-library p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .site-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-top: 1px solid var(--border);
+      padding: 17px 2px 0;
+      color: var(--muted-2);
+      font-size: 9.5px;
+    }
+
+    .footer-note {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .footer-note::before {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--teal);
+      content: "";
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      background: rgba(5, 12, 24, 0.58);
+      backdrop-filter: blur(3px);
+      cursor: default;
+    }
+
+    .modal-panel {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 100%);
+      max-height: calc(100vh - 44px);
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      box-shadow: var(--shadow-lg);
+      animation: modal-in 180ms ease both;
+    }
+
+    @keyframes modal-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--border);
+      padding: 19px 21px 15px;
+    }
+
+    .modal-head h2 {
+      margin: 0 0 4px;
+      font-size: 17px;
+      font-weight: 760;
+      letter-spacing: -0.025em;
+    }
+
+    .modal-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 10.5px;
+    }
+
+    .modal-close {
+      display: grid;
+      width: 31px;
+      height: 31px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--panel);
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+      background: var(--panel-soft);
+    }
+
+    .modal-body {
+      padding: 18px 21px;
+    }
+
+    .modal-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .modal .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .modal textarea.code-input {
+      min-height: 240px;
+    }
+
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 9px;
+      border-top: 1px solid var(--border);
+      padding: 13px 21px;
+      background: var(--panel-soft);
+    }
+
+    .info-copy {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.7;
+    }
+
+    .info-copy strong {
+      color: var(--text);
+    }
+
+    .extension-example {
+      max-height: 360px;
+      margin: 14px 0 0;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      color: var(--code-text);
+      background: var(--code-bg);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.65;
+      white-space: pre;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 200;
+      right: 22px;
+      bottom: 22px;
+      display: flex;
+      max-width: min(360px, calc(100vw - 44px));
+      align-items: center;
+      gap: 9px;
+      border: 1px solid color-mix(in srgb, var(--teal) 28%, var(--border));
+      border-radius: 10px;
+      padding: 10px 13px;
+      color: var(--text);
+      background: var(--panel);
+      box-shadow: 0 15px 45px rgba(12, 25, 46, 0.18);
+      font-size: 11px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 170ms ease, transform 170ms ease;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast-dot {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+
+    .toast.error {
+      border-color: color-mix(in srgb, var(--danger) 30%, var(--border));
+    }
+
+    .toast.error .toast-dot {
+      background: var(--danger);
+    }
+
+    @media (max-width: 1120px) {
+      .workbench-body {
+        grid-template-columns: 1fr;
+      }
+
+      .form-pane {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .result-shell {
+        min-height: 240px;
+      }
+
+      .result-empty {
+        min-height: 238px;
+      }
+
+      .library-toolbar {
+        flex-wrap: wrap;
+      }
+
+      .category-tabs {
+        order: 3;
+        flex-basis: 100%;
+      }
+
+      .library-search {
+        flex: 1 1 200px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .header-inner,
+      .page-wrap {
+        width: min(100% - 28px, 1520px);
+      }
+
+      .header-inner {
+        flex-wrap: wrap;
+        gap: 9px 18px;
+        padding: 11px 0;
+      }
+
+      .main-tabs {
+        order: 3;
+        width: 100%;
+        min-height: 38px;
+        border-top: 1px solid var(--border);
+      }
+
+      .main-tab {
+        flex: 1;
+        justify-content: center;
+        padding: 11px 9px 8px;
+      }
+
+      .header-actions {
+        margin-left: auto;
+      }
+
+      .local-badge {
+        display: none;
+      }
+
+      .site-header {
+        position: relative;
+      }
+
+      .sim-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .catalog-panel {
+        position: static;
+      }
+
+      .algorithm-list {
+        display: grid;
+        max-height: 260px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3px;
+      }
+
+      .algorithm-item + .algorithm-item {
+        margin-top: 0;
+      }
+
+      .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .heading-stats {
+        width: 100%;
+      }
+
+      .stat-tile {
+        flex: 1;
+      }
+
+      .template-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workbench-head {
+        flex-direction: column;
+      }
+
+      .workbench-aside {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .brand-subtitle {
+        display: none;
+      }
+
+      .page-wrap {
+        padding-top: 20px;
+      }
+
+      .algorithm-list {
+        grid-template-columns: 1fr;
+      }
+
+      .param-grid,
+      .modal-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full,
+      .modal .field.full {
+        grid-column: auto;
+      }
+
+      .shortcut-hint {
+        display: none;
+      }
+
+      .workbench-head,
+      .form-pane,
+      .result-pane {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      .library-toolbar {
+        padding: 9px;
+      }
+
+      .add-template-button {
+        width: 100%;
+      }
+
+      .library-search {
+        flex-basis: 100%;
+      }
+
+      .site-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .modal {
+        align-items: end;
+        padding: 10px;
+      }
+
+      .modal-panel {
+        max-height: calc(100vh - 20px);
+      }
+
+      .modal-body,
+      .modal-head,
+      .modal-footer {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      .toast {
+        right: 14px;
+        bottom: 14px;
+        left: 14px;
+        max-width: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+  <script>
+    try {
+      const savedTheme = localStorage.getItem("algo-toolbox-theme");
+      if (savedTheme === "dark" || savedTheme === "light") {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand" aria-label="AlgoToolbox 通用算法工具箱">
+          <div class="brand-mark" aria-hidden="true">{ }</div>
+          <div>
+            <div class="brand-title">AlgoToolbox</div>
+            <div class="brand-subtitle">Local Algorithm Lab</div>
+          </div>
+        </div>
+
+        <nav class="main-tabs" role="tablist" aria-label="工具箱主功能">
+          <button class="main-tab" id="simulatorTab" type="button" role="tab" aria-selected="true" aria-controls="simulatorView" data-view="simulator">
+            <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="3"></rect>
+              <path d="M7 8h4M7 12h2M7 16h3M15 8l2 2-2 2M17 14l2 2-2 2"></path>
+            </svg>
+            在线计算模拟器
+          </button>
+          <button class="main-tab" id="libraryTab" type="button" role="tab" aria-selected="false" aria-controls="libraryView" data-view="library">
+            <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"></path>
+              <path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8"></path>
+            </svg>
+            C++ 算法模板库
+          </button>
+        </nav>
+
+        <div class="header-actions">
+          <span class="local-badge"><span class="status-dot"></span>纯本地运行</span>
+          <button class="icon-button" id="themeToggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">
+            <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-wrap">
+      <section class="view" id="simulatorView" role="tabpanel" aria-labelledby="simulatorTab">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">Compute locally</div>
+            <h1>在线计算模拟器</h1>
+            <p>选择算法、填写参数并立即得到结果。全部计算在浏览器内存中完成，不上传输入，不请求任何接口。</p>
+          </div>
+          <div class="heading-stats" aria-label="模拟器状态">
+            <div class="stat-tile"><strong id="algorithmCount">0</strong><span>可用算法</span></div>
+            <div class="stat-tile"><strong>8</strong><span>算法分类</span></div>
+            <div class="stat-tile"><strong>0</strong><span>网络请求</span></div>
+          </div>
+        </div>
+
+        <div class="sim-layout">
+          <aside class="panel catalog-panel" aria-label="算法目录">
+            <div class="panel-head">
+              <h2 class="panel-title">算法目录</h2>
+              <span class="count-label" id="visibleAlgorithmCount">0 ITEMS</span>
+            </div>
+            <div class="catalog-controls">
+              <label class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <path d="m20 20-4-4"></path>
+                </svg>
+                <input id="algorithmSearch" type="search" placeholder="搜索算法或分类…" autocomplete="off" aria-label="搜索算法">
+                <button class="clear-search" id="clearAlgorithmSearch" type="button" aria-label="清空搜索">×</button>
+              </label>
+            </div>
+            <div class="filter-pills" id="algorithmFilters" aria-label="算法分类筛选"></div>
+            <div class="algorithm-list" id="algorithmList"></div>
+            <div class="catalog-footer">
+              <button class="text-button" id="showExtensionInfo" type="button">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                查看算法扩展接口
+              </button>
+            </div>
+          </aside>
+
+          <section class="panel workbench" id="workbench" aria-live="polite" aria-label="算法计算工作区"></section>
+        </div>
+      </section>
+
+      <section class="view" id="libraryView" role="tabpanel" aria-labelledby="libraryTab" hidden>
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">Copy · Compile · Solve</div>
+            <h1>C++ 算法模板库</h1>
+            <p>按专题整理的可复制代码片段。支持分类筛选、关键词检索、本地新增模板与一键复制，适合作战前快速查阅。</p>
+          </div>
+          <div class="heading-stats" aria-label="模板库状态">
+            <div class="stat-tile"><strong id="templateCount">0</strong><span>代码模板</span></div>
+            <div class="stat-tile"><strong id="customTemplateCount">0</strong><span>本地新增</span></div>
+            <div class="stat-tile"><strong>C++17</strong><span>语言标准</span></div>
+          </div>
+        </div>
+
+        <div class="library-toolbar">
+          <div class="category-tabs" id="templateCategories" role="tablist" aria-label="模板分类"></div>
+          <label class="search-box library-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4"></path>
+            </svg>
+            <input id="templateSearch" type="search" placeholder="搜索模板、标签或代码…" autocomplete="off" aria-label="搜索模板">
+            <button class="clear-search" id="clearTemplateSearch" type="button" aria-label="清空搜索">×</button>
+          </label>
+          <button class="primary-button add-template-button" id="addTemplateButton" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+            新增模板
+          </button>
+        </div>
+
+        <div class="library-meta">
+          <span id="templateMetaText">正在载入模板…</span>
+          <span>自定义模板仅保存在当前浏览器</span>
+        </div>
+        <div class="template-groups" id="templateGroups"></div>
+      </section>
+
+      <footer class="site-footer">
+        <span class="footer-note">AlgoToolbox 为单文件离线工具，无后端、无 AI 接口、无外部依赖。</span>
+        <span>本地存储只用于主题与自定义模板</span>
+      </footer>
+    </main>
+  </div>
+
+  <div class="modal" id="templateModal" role="presentation" hidden>
+    <button class="modal-backdrop" type="button" data-close-modal="templateModal" aria-label="关闭新增模板窗口"></button>
+    <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="templateModalTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="templateModalTitle">新增代码模板</h2>
+          <p>填写模板信息与 C++ 代码，保存后会立即出现在对应分类中。</p>
+        </div>
+        <button class="modal-close" type="button" data-close-modal="templateModal" aria-label="关闭">×</button>
+      </div>
+      <form id="templateForm">
+        <div class="modal-body">
+          <div class="modal-form-grid">
+            <div class="field">
+              <label for="newTemplateCategory">所属分类</label>
+              <select id="newTemplateCategory" name="category" required></select>
+            </div>
+            <div class="field">
+              <label for="newTemplateName">模板名称</label>
+              <input id="newTemplateName" name="name" type="text" required maxlength="60" placeholder="例如：Dinic 最大流">
+            </div>
+            <div class="field">
+              <label for="newTemplateComplexity">复杂度</label>
+              <input id="newTemplateComplexity" name="complexity" type="text" maxlength="40" placeholder="例如：O(E√V)">
+            </div>
+            <div class="field">
+              <label for="newTemplateTags">标签</label>
+              <input id="newTemplateTags" name="tags" type="text" maxlength="100" placeholder="用逗号分隔，如：网络流, Dinic">
+            </div>
+            <div class="field full">
+              <label for="newTemplateSummary">简介</label>
+              <input id="newTemplateSummary" name="summary" type="text" maxlength="160" placeholder="一句话说明模板用途与适用条件">
+            </div>
+            <div class="field full">
+              <label for="newTemplateCode">C++ 代码</label>
+              <textarea class="code-input" id="newTemplateCode" name="code" required spellcheck="false" placeholder="#include <bits/stdc++.h>&#10;using namespace std;&#10;&#10;// your code here"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="secondary-button" type="button" data-close-modal="templateModal">取消</button>
+          <button class="primary-button" type="submit">保存模板</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal" id="infoModal" role="presentation" hidden>
+    <button class="modal-backdrop" type="button" data-close-modal="infoModal" aria-label="关闭扩展说明"></button>
+    <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="infoModalTitle">扩展算法注册表</h2>
+          <p>页面不依赖固定算法清单，在线计算器由本地注册表自动生成。</p>
+        </div>
+        <button class="modal-close" type="button" data-close-modal="infoModal" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-copy">
+          在 <strong>index.html</strong> 底部脚本中向 <strong>ALGORITHMS</strong> 数组追加配置，或调用 <strong>window.AlgoToolbox.registerAlgorithm()</strong>。配置的 <strong>params</strong> 会自动渲染输入框，<strong>run(args)</strong> 返回字符串或结果对象即可。
+        </div>
+        <pre class="extension-example" id="extensionExample"></pre>
+      </div>
+      <div class="modal-footer">
+        <button class="primary-button" type="button" data-close-modal="infoModal">知道了</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toastText"></span>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const CATEGORIES = [
+        { id: "number-theory", name: "数论", short: "NT", description: "整除、质数、同余与组合计数" },
+        { id: "graph", name: "图论", short: "GR", description: "最短路、连通性、拓扑与网络流" },
+        { id: "dp", name: "DP", short: "DP", description: "线性、背包、区间与状态压缩" },
+        { id: "string", name: "字符串", short: "ST", description: "匹配、哈希、自动机与字典树" },
+        { id: "data-structure", name: "数据结构", short: "DS", description: "树状数组、线段树与单调结构" },
+        { id: "greedy", name: "贪心", short: "GD", description: "区间选择、调度与交换论证" },
+        { id: "divide-conquer", name: "分治", short: "DC", description: "二分、归并与分治统计" },
+        { id: "geometry", name: "计算几何", short: "CG", description: "向量、凸包与相交判定" }
+      ];
+
+      const CATEGORY_MAP = new Map(CATEGORIES.map(category => [category.id, category]));
+      const BUILTIN_TEMPLATE_IDS = new Set();
+      const CUSTOM_TEMPLATE_KEY = "algo-toolbox-custom-templates-v1";
+      const SELECTED_ALGORITHM_KEY = "algo-toolbox-selected-algorithm";
+      const SELECTED_CATEGORY_KEY = "algo-toolbox-template-category";
+
+      const escapeHtml = value => String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+      const escapeAttr = escapeHtml;
+
+      const readStorage = (key, fallback) => {
+        try {
+          const value = localStorage.getItem(key);
+          return value === null ? fallback : value;
+        } catch (_) {
+          return fallback;
+        }
+      };
+
+      const writeStorage = (key, value) => {
+        try {
+          localStorage.setItem(key, value);
+        } catch (_) {}
+      };
+
+      const parseIntegerList = (text, label = "整数序列") => {
+        const cleaned = String(text ?? "").trim();
+        if (!cleaned) throw new Error(`请填写${label}。`);
+        const tokens = cleaned.split(/[\s,，]+/).filter(Boolean);
+        const values = tokens.map(token => {
+          if (!/^[+-]?\d+$/.test(token)) throw new Error(`${label}中存在非法整数：${token}`);
+          const value = Number(token);
+          if (!Number.isSafeInteger(value)) throw new Error(`${label}中的整数超出安全范围：${token}`);
+          return value;
+        });
+        return values;
+      };
+
+      const parseBigIntList = (text, label = "整数序列") => {
+        const cleaned = String(text ?? "").trim();
+        if (!cleaned) throw new Error(`请填写${label}。`);
+        return cleaned.split(/[\s,，]+/).filter(Boolean).map(token => {
+          if (!/^[+-]?\d+$/.test(token)) throw new Error(`${label}中存在非法整数：${token}`);
+          try {
+            return BigInt(token);
+          } catch (_) {
+            throw new Error(`${label}中的整数无法解析：${token}`);
+          }
+        });
+      };
+
+      const nonEmptyLines = (text, label = "输入") => {
+        const lines = String(text ?? "").split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+        if (!lines.length) throw new Error(`请至少填写一行${label}。`);
+        return lines;
+      };
+
+      const splitTokens = line => line.trim().split(/[\s,，]+/).filter(Boolean);
+
+      const parseWeightedEdges = text => {
+        return nonEmptyLines(text, "边").map((line, index) => {
+          const tokens = splitTokens(line);
+          if (tokens.length !== 3) throw new Error(`第 ${index + 1} 行边格式应为：u v w`);
+          const weight = Number(tokens[2]);
+          if (!Number.isFinite(weight) || weight < 0) throw new Error(`第 ${index + 1} 行边权必须是非负数。`);
+          return { u: tokens[0], v: tokens[1], w: weight, line: index + 1 };
+        });
+      };
+
+      const parseUnweightedEdges = text => {
+        return nonEmptyLines(text, "边").map((line, index) => {
+          const tokens = splitTokens(line);
+          if (tokens.length < 2) throw new Error(`第 ${index + 1} 行边格式应为：u v`);
+          return { u: tokens[0], v: tokens[1], line: index + 1 };
+        });
+      };
+
+      const buildAdjacency = (edges, directed = false) => {
+        const graph = new Map();
+        const ensure = node => {
+          if (!graph.has(node)) graph.set(node, []);
+        };
+        for (const edge of edges) {
+          ensure(edge.u);
+          ensure(edge.v);
+          graph.get(edge.u).push({ to: edge.v, weight: edge.w ?? 1 });
+          if (!directed) graph.get(edge.v).push({ to: edge.u, weight: edge.w ?? 1 });
+        }
+        return graph;
+      };
+
+      const formatNumber = value => Number.isInteger(value) ? String(value) : value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+
+      const gcd = (a, b) => {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        while (b) [a, b] = [b, a % b];
+        return a;
+      };
+
+      const formatElapsed = milliseconds => milliseconds < 1 ? "<1 ms" : `${milliseconds.toFixed(milliseconds < 10 ? 2 : 1)} ms`;
+
+      const ALGORITHMS = [
+        {
+          id: "gcd-lcm",
+          category: "number-theory",
+          name: "最大公约数 / 最小公倍数",
+          symbol: "gcd",
+          summary: "计算整数序列的整体 GCD 与 LCM，使用 BigInt 避免乘积溢出。",
+          complexity: "O(n log A)",
+          params: [
+            { id: "numbers", label: "整数序列", type: "textarea", defaultValue: "12 18 30 45", hint: "空格、逗号或换行分隔", full: true }
+          ],
+          run({ numbers }) {
+            const values = parseBigIntList(numbers);
+            const bigGcd = (a, b) => {
+              a = a < 0n ? -a : a;
+              b = b < 0n ? -b : b;
+              while (b) [a, b] = [b, a % b];
+              return a;
+            };
+            const g = values.reduce((acc, value) => bigGcd(acc, value));
+            const l = values.reduce((acc, value) => {
+              if (acc === 0n || value === 0n) return 0n;
+              const div = bigGcd(acc, value);
+              return (acc / div) * (value < 0n ? -value : value);
+            });
+            return {
+              headline: `gcd = ${g}`,
+              chips: [
+                { label: "LCM", value: l },
+                { label: "数量", value: values.length }
+              ],
+              detail: `输入：${values.join(", ")}\nGCD：${g}\nLCM：${l}`
+            };
+          }
+        },
+        {
+          id: "prime-sieve",
+          category: "number-theory",
+          name: "线性筛 / 素数表",
+          symbol: "p",
+          summary: "统计不超过上界的素数，并列出前若干个素数。",
+          complexity: "O(n)",
+          params: [
+            { id: "limit", label: "上界 n", type: "number", defaultValue: "1000", min: "2", max: "2000000", hint: "建议不超过 2,000,000" },
+            { id: "show", label: "展示个数", type: "number", defaultValue: "20", min: "1", max: "100", hint: "结果中最多展示 100 个" }
+          ],
+          run({ limit, show }) {
+            const n = Number(limit);
+            const k = Number(show);
+            if (!Number.isInteger(n) || n < 2 || n > 2000000) throw new Error("上界 n 必须是 2 到 2,000,000 之间的整数。");
+            if (!Number.isInteger(k) || k < 1 || k > 100) throw new Error("展示个数必须是 1 到 100 之间的整数。");
+            const isPrime = new Uint8Array(n + 1);
+            isPrime.fill(1, 2);
+            for (let i = 2; i * i <= n; i++) {
+              if (!isPrime[i]) continue;
+              for (let j = i * i; j <= n; j += i) isPrime[j] = 0;
+            }
+            const primes = [];
+            for (let i = 2; i <= n; i++) if (isPrime[i]) primes.push(i);
+            return {
+              headline: `${primes.length.toLocaleString()} 个素数`,
+              chips: [
+                { label: "π(n)", value: primes.length },
+                { label: "最大素数", value: primes.at(-1) ?? "—" }
+              ],
+              detail: `前 ${Math.min(k, primes.length)} 个素数：\n${primes.slice(0, k).join(" ")}${primes.length > k ? " …" : ""}`
+            };
+          }
+        },
+        {
+          id: "mod-pow",
+          category: "number-theory",
+          name: "快速幂 / 模逆元",
+          symbol: "aᵇ",
+          summary: "计算 a^b mod m，并可用扩展欧几里得求 a 在模 m 下的逆元。",
+          complexity: "O(log b)",
+          params: [
+            { id: "base", label: "底数 a", type: "text", defaultValue: "2026", hint: "支持大整数" },
+            { id: "exp", label: "指数 b", type: "text", defaultValue: "1000000000" },
+            { id: "mod", label: "模数 m", type: "text", defaultValue: "1000000007", hint: "必须为正整数" }
+          ],
+          run({ base, exp, mod }) {
+            const [a] = parseBigIntList(base, "底数 a");
+            const [b] = parseBigIntList(exp, "指数 b");
+            const [m] = parseBigIntList(mod, "模数 m");
+            if (m <= 0n) throw new Error("模数 m 必须大于 0。");
+            if (b < 0n) throw new Error("指数 b 必须是非负整数。");
+            let result = 1n;
+            let cur = ((a % m) + m) % m;
+            let power = b;
+            while (power > 0n) {
+              if (power & 1n) result = result * cur % m;
+              cur = cur * cur % m;
+              power >>= 1n;
+            }
+            const exgcd = (x, y) => {
+              if (y === 0n) return [x, 1n, 0n];
+              const [g, p, q] = exgcd(y, x % y);
+              return [g, q, p - (x / y) * q];
+            };
+            const [g, inv] = exgcd(((a % m) + m) % m, m);
+            const inverse = g === 1n ? ((inv % m) + m) % m : null;
+            return {
+              headline: `${a}^${b} mod ${m} = ${result}`,
+              chips: [
+                { label: "a mod m", value: ((a % m) + m) % m },
+                { label: "逆元", value: inverse === null ? "不存在" : inverse }
+              ],
+              detail: `快速幂结果：${result}\n${inverse === null ? `gcd(a, m) = ${g}，a 在模 m 下没有逆元。` : `模逆元：${inverse}\n验证：(a × inv) mod m = ${((a % m) + m) % m * inverse % m}`}`
+            };
+          }
+        },
+        {
+          id: "bfs-shortest",
+          category: "graph",
+          name: "BFS 无权最短路",
+          symbol: "BFS",
+          summary: "在无向无权图上求起点到终点的最少边数及一条最短路径。",
+          complexity: "O(V + E)",
+          params: [
+            { id: "edges", label: "无向边", type: "textarea", defaultValue: "A B\nA C\nB D\nC D\nD E", hint: "每行一条：u v", full: true },
+            { id: "source", label: "起点", type: "text", defaultValue: "A" },
+            { id: "target", label: "终点", type: "text", defaultValue: "E" }
+          ],
+          run({ edges, source, target }) {
+            const parsed = parseUnweightedEdges(edges);
+            const graph = buildAdjacency(parsed, false);
+            source = String(source).trim();
+            target = String(target).trim();
+            if (!graph.has(source) || !graph.has(target)) throw new Error("起点或终点没有出现在边的端点中。");
+            const distance = new Map([[source, 0]]);
+            const parent = new Map([[source, null]]);
+            const queue = [source];
+            for (let head = 0; head < queue.length && !distance.has(target); head++) {
+              const node = queue[head];
+              for (const edge of graph.get(node)) {
+                if (distance.has(edge.to)) continue;
+                distance.set(edge.to, distance.get(node) + 1);
+                parent.set(edge.to, node);
+                queue.push(edge.to);
+              }
+            }
+            if (!distance.has(target)) throw new Error(`${source} 与 ${target} 不连通。`);
+            const path = [];
+            for (let node = target; node !== null; node = parent.get(node)) path.push(node);
+            path.reverse();
+            return {
+              headline: `${distance.get(target)} 条边`,
+              chips: [
+                { label: "访问节点", value: queue.length },
+                { label: "路径长度", value: path.length }
+              ],
+              detail: `最短路径：${path.join(" → ")}\n搜索访问顺序：${queue.join(" → ")}`
+            };
+          }
+        },
+        {
+          id: "dijkstra",
+          category: "graph",
+          name: "Dijkstra 最短路",
+          symbol: "Dij",
+          summary: "处理非负边权，计算单源最短距离与起点到终点的路径。",
+          complexity: "O((V + E) log V)",
+          params: [
+            { id: "edges", label: "有向带权边", type: "textarea", defaultValue: "A B 4\nA C 2\nC B 1\nB D 5\nC D 8\nD E 2", hint: "每行一条：u v w；可改成无向输入后重复写反向边", full: true },
+            { id: "source", label: "源点", type: "text", defaultValue: "A" },
+            { id: "target", label: "目标点（可空）", type: "text", defaultValue: "E" }
+          ],
+          run({ edges, source, target }) {
+            let parsed = parseWeightedEdges(edges);
+            const graph = (() => {
+              const g = new Map();
+              const ensure = node => { if (!g.has(node)) g.set(node, []); };
+              parsed.forEach(edge => {
+                ensure(edge.u);
+                ensure(edge.v);
+                g.get(edge.u).push({ to: edge.v, weight: edge.w });
+              });
+              return g;
+            })();
+            source = String(source).trim();
+            target = String(target).trim();
+            if (!graph.has(source)) throw new Error("源点没有出现在边的起点中。");
+            if (target && !graph.has(target)) throw new Error("目标点没有出现在图中。");
+            const dist = new Map([...graph.keys()].map(node => [node, Infinity]));
+            const parent = new Map();
+            dist.set(source, 0);
+            const queue = [[0, source]];
+            while (queue.length) {
+              queue.sort((a, b) => a[0] - b[0]);
+              const [du, u] = queue.shift();
+              if (du !== dist.get(u)) continue;
+              for (const edge of graph.get(u)) {
+                const nextDistance = du + edge.weight;
+                if (nextDistance >= dist.get(edge.to)) continue;
+                dist.set(edge.to, nextDistance);
+                parent.set(edge.to, u);
+                queue.push([nextDistance, edge.to]);
+              }
+            }
+            const finite = [...dist.entries()].filter(([, value]) => Number.isFinite(value)).sort((a, b) => a[1] - b[1]);
+            let headline;
+            let detail;
+            if (target) {
+              if (!Number.isFinite(dist.get(target))) throw new Error(`${source} 无法到达 ${target}。`);
+              const path = [];
+              for (let node = target; node !== undefined; node = parent.get(node)) {
+                path.push(node);
+                if (node === source) break;
+              }
+              path.reverse();
+              headline = `${source} → ${target} = ${dist.get(target)}`;
+              detail = `最短路径：${path.join(" → ")}\n\n最短距离表：\n${finite.map(([node, value]) => `${node}: ${value}`).join("\n")}`;
+            } else {
+              headline = `${finite.length} 个可达节点`;
+              detail = `单源最短距离：\n${finite.map(([node, value]) => `${node}: ${value}`).join("\n")}`;
+            }
+            return {
+              headline,
+              chips: [
+                { label: "节点数", value: graph.size },
+                { label: "可达数", value: finite.length }
+              ],
+              detail
+            };
+          }
+        },
+        {
+          id: "topo-sort",
+          category: "graph",
+          name: "拓扑排序",
+          symbol: "DAG",
+          summary: "对任意顶点名称的有向图执行 Kahn 拓扑排序，并检测有向环。",
+          complexity: "O(V + E)",
+          params: [
+            { id: "edges", label: "有向边", type: "textarea", defaultValue: "选课 高数\n选课 线代\n高数 算法\n线代 算法", hint: "每行一条 u → v", full: true }
+          ],
+          run({ edges }) {
+            const parsed = parseUnweightedEdges(edges);
+            const adj = new Map();
+            const indegree = new Map();
+            const ensure = node => {
+              if (!adj.has(node)) adj.set(node, []);
+              if (!indegree.has(node)) indegree.set(node, 0);
+            };
+            parsed.forEach(({ u, v }) => {
+              ensure(u);
+              ensure(v);
+              adj.get(u).push(v);
+              indegree.set(v, indegree.get(v) + 1);
+            });
+            const queue = [...indegree.entries()].filter(([, degree]) => degree === 0).map(([node]) => node);
+            const order = [];
+            for (let head = 0; head < queue.length; head++) {
+              const node = queue[head];
+              order.push(node);
+              for (const next of adj.get(node)) {
+                indegree.set(next, indegree.get(next) - 1);
+                if (indegree.get(next) === 0) queue.push(next);
+              }
+            }
+            if (order.length !== indegree.size) {
+              const cycleNodes = [...indegree.entries()].filter(([, degree]) => degree > 0).map(([node]) => node);
+              throw new Error(`图中存在有向环，无法完成拓扑排序。\n残余入度非零节点：${cycleNodes.join(", ")}`);
+            }
+            return {
+              headline: `${order.length} 个节点已排序`,
+              chips: [
+                { label: "节点", value: indegree.size },
+                { label: "边", value: parsed.length }
+              ],
+              detail: `拓扑序：${order.join(" → ")}\n\n该序满足所有边的方向约束。`
+            };
+          }
+        },
+        {
+          id: "knapsack",
+          category: "dp",
+          name: "0/1 背包",
+          symbol: "01",
+          summary: "在容量限制下选择物品，使总价值最大，并尝试还原选择方案。",
+          complexity: "O(nC)",
+          params: [
+            { id: "weights", label: "物品重量", type: "textarea", defaultValue: "2 3 4 5", hint: "空格或逗号分隔", full: true },
+            { id: "values", label: "物品价值", type: "textarea", defaultValue: "3 4 5 8", hint: "数量需与重量一致", full: true },
+            { id: "capacity", label: "背包容量", type: "number", defaultValue: "8", min: "0", max: "100000" }
+          ],
+          run({ weights, values, capacity }) {
+            const w = parseIntegerList(weights, "物品重量");
+            const v = parseIntegerList(values, "物品价值");
+            const cap = Number(capacity);
+            if (w.length !== v.length) throw new Error("物品重量与价值数量必须一致。");
+            if (!Number.isInteger(cap) || cap < 0 || cap > 100000) throw new Error("背包容量必须是 0 到 100,000 之间的整数。");
+            if (w.some(x => x < 0) || v.some(x => x < 0)) throw new Error("重量和价值必须是非负整数。");
+            if (w.length * (cap + 1) <= 4500000) {
+              const dp = Array.from({ length: w.length + 1 }, () => new Array(cap + 1).fill(0));
+              for (let i = 1; i <= w.length; i++) {
+                for (let c = 0; c <= cap; c++) {
+                  dp[i][c] = dp[i - 1][c];
+                  if (w[i - 1] <= c) dp[i][c] = Math.max(dp[i][c], dp[i - 1][c - w[i - 1]] + v[i - 1]);
+                }
+              }
+              const selected = [];
+              let c = cap;
+              for (let i = w.length; i >= 1; i--) {
+                if (dp[i][c] !== dp[i - 1][c]) {
+                  selected.push(i);
+                  c -= w[i - 1];
+                }
+              }
+              selected.reverse();
+              const totalWeight = selected.reduce((sum, i) => sum + w[i - 1], 0);
+              return {
+                headline: `最大价值 = ${dp[w.length][cap]}`,
+                chips: [
+                  { label: "容量", value: cap },
+                  { label: "已用重量", value: totalWeight }
+                ],
+                detail: `选择物品：${selected.length ? selected.map(i => `#${i}`).join(", ") : "不选择任何物品"}\n总重量：${totalWeight}\n总价值：${dp[w.length][cap]}`
+              };
+            }
+            const dp = new Array(cap + 1).fill(0);
+            for (let i = 0; i < w.length; i++) {
+              for (let c = cap; c >= w[i]; c--) {
+                dp[c] = Math.max(dp[c], dp[c - w[i]] + v[i]);
+              }
+            }
+            return {
+              headline: `最大价值 = ${dp[cap]}`,
+              chips: [
+                { label: "容量", value: cap },
+                { label: "物品数", value: w.length }
+              ],
+              detail: "输入规模较大，已使用一维 DP 计算最大价值，不再还原具体选择方案。"
+            };
+          }
+        },
+        {
+          id: "lis",
+          category: "dp",
+          name: "最长上升子序列",
+          symbol: "LIS",
+          summary: "求严格最长上升子序列长度，并还原一条合法的 LIS。",
+          complexity: "O(n log n)",
+          params: [
+            { id: "sequence", label: "整数序列", type: "textarea", defaultValue: "10 9 2 5 3 7 101 18", hint: "空格、逗号或换行分隔", full: true }
+          ],
+          run({ sequence }) {
+            const a = parseIntegerList(sequence, "整数序列");
+            if (!a.length) throw new Error("序列不能为空。");
+            const tails = [];
+            const tailIndex = [];
+            const parent = new Array(a.length).fill(-1);
+            for (let i = 0; i < a.length; i++) {
+              let left = 0;
+              let right = tails.length;
+              while (left < right) {
+                const mid = (left + right) >> 1;
+                if (tails[mid] < a[i]) left = mid + 1;
+                else right = mid;
+              }
+              tails[left] = a[i];
+              tailIndex[left] = i;
+              parent[i] = left > 0 ? tailIndex[left - 1] : -1;
+            }
+            const result = [];
+            let cursor = tailIndex[tails.length - 1];
+            while (cursor !== -1) {
+              result.push(a[cursor]);
+              cursor = parent[cursor];
+            }
+            result.reverse();
+            return {
+              headline: `LIS 长度 = ${tails.length}`,
+              chips: [
+                { label: "序列长度", value: a.length },
+                { label: "末项", value: result.at(-1) }
+              ],
+              detail: `一条最长上升子序列：\n${result.join(" → ")}`
+            };
+          }
+        },
+        {
+          id: "kmp",
+          category: "string",
+          name: "KMP 字符串匹配",
+          symbol: "KMP",
+          summary: "查找模式串在文本中的所有出现位置。位置从 1 开始编号。",
+          complexity: "O(n + m)",
+          params: [
+            { id: "text", label: "文本串", type: "textarea", defaultValue: "abababcabababc", hint: "大小写敏感", full: true },
+            { id: "pattern", label: "模式串", type: "text", defaultValue: "ababc" }
+          ],
+          run({ text, pattern }) {
+            text = String(text);
+            pattern = String(pattern);
+            if (!pattern.length) throw new Error("模式串不能为空。");
+            if (pattern.length > text.length) throw new Error("模式串长度大于文本串。");
+            const pi = new Array(pattern.length).fill(0);
+            for (let i = 1, j = 0; i < pattern.length; i++) {
+              while (j > 0 && pattern[i] !== pattern[j]) j = pi[j - 1];
+              if (pattern[i] === pattern[j]) j++;
+              pi[i] = j;
+            }
+            const positions = [];
+            for (let i = 0, j = 0; i < text.length; i++) {
+              while (j > 0 && text[i] !== pattern[j]) j = pi[j - 1];
+              if (text[i] === pattern[j]) j++;
+              if (j === pattern.length) {
+                positions.push(i - pattern.length + 2);
+                j = pi[j - 1];
+              }
+            }
+            return {
+              headline: `找到 ${positions.length} 处匹配`,
+              chips: [
+                { label: "文本长度", value: text.length },
+                { label: "模式长度", value: pattern.length }
+              ],
+              detail: `匹配位置（1-indexed）：${positions.length ? positions.join(", ") : "无"}\n\n前缀函数 π：${pi.join(" ")}`
+            };
+          }
+        },
+        {
+          id: "fenwick",
+          category: "data-structure",
+          name: "树状数组操作模拟",
+          symbol: "BIT",
+          summary: "模拟单点加值与区间求和操作，即时查看每次操作后的结果。",
+          complexity: "O(log n)",
+          params: [
+            { id: "array", label: "初始数组", type: "textarea", defaultValue: "1 3 5 7 9", hint: "下标从 1 开始", full: true },
+            { id: "operations", label: "操作列表", type: "textarea", defaultValue: "sum 1 3\nadd 2 10\nsum 1 5\nsum 2 2\nadd 5 -10\nsum 1 5", hint: "add i delta 或 sum l r", full: true }
+          ],
+          run({ array, operations }) {
+            const a = parseIntegerList(array, "初始数组");
+            const tree = new Array(a.length + 1).fill(0);
+            const add = (index, delta) => {
+              for (let i = index; i < tree.length; i += i & -i) tree[i] += delta;
+            };
+            a.forEach((value, index) => add(index + 1, value));
+            const prefix = index => {
+              let sum = 0;
+              for (let i = index; i > 0; i -= i & -i) sum += tree[i];
+              return sum;
+            };
+            const lines = nonEmptyLines(operations, "操作");
+            const log = [];
+            lines.forEach((line, lineIndex) => {
+              const tokens = splitTokens(line);
+              const command = tokens[0].toLowerCase();
+              if (command === "add" && tokens.length === 3) {
+                const index = Number(tokens[1]);
+                const delta = Number(tokens[2]);
+                if (!Number.isInteger(index) || index < 1 || index > a.length) throw new Error(`第 ${lineIndex + 1} 行 add 下标越界。`);
+                if (!Number.isFinite(delta)) throw new Error(`第 ${lineIndex + 1} 行 add 的增量非法。`);
+                add(index, delta);
+                log.push(`add(${index}, ${delta}) → 完成`);
+              } else if (command === "sum" && tokens.length === 3) {
+                let left = Number(tokens[1]);
+                let right = Number(tokens[2]);
+                if (!Number.isInteger(left) || !Number.isInteger(right) || left < 1 || right > a.length || left > right) {
+                  throw new Error(`第 ${lineIndex + 1} 行 sum 区间非法。`);
+                }
+                log.push(`sum(${left}, ${right}) = ${prefix(right) - prefix(left - 1)}`);
+              } else {
+                throw new Error(`第 ${lineIndex + 1} 行操作无法识别，请使用 add i delta 或 sum l r。`);
+              }
+            });
+            return {
+              headline: `完成 ${lines.length} 次操作`,
+              chips: [
+                { label: "数组长度", value: a.length },
+                { label: "当前总和", value: prefix(a.length) }
+              ],
+              detail: log.join("\n")
+            };
+          }
+        },
+        {
+          id: "interval-scheduling",
+          category: "greedy",
+          name: "区间调度",
+          symbol: "END",
+          summary: "按结束时间贪心选择最多数量的互不重叠闭区间。",
+          complexity: "O(n log n)",
+          params: [
+            { id: "intervals", label: "区间列表", type: "textarea", defaultValue: "1 3\n2 5\n3 6\n5 7\n6 9\n8 10", hint: "每行：开始 结束（闭区间）", full: true }
+          ],
+          run({ intervals }) {
+            const items = nonEmptyLines(intervals, "区间").map((line, index) => {
+              const tokens = splitTokens(line);
+              if (tokens.length !== 2) throw new Error(`第 ${index + 1} 行区间格式应为：start end`);
+              const start = Number(tokens[0]);
+              const end = Number(tokens[1]);
+              if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) throw new Error(`第 ${index + 1} 行区间非法。`);
+              return { start, end, index: index + 1 };
+            });
+            const sorted = items.slice().sort((a, b) => a.end - b.end || a.start - b.start);
+            const selected = [];
+            let lastEnd = -Infinity;
+            for (const interval of sorted) {
+              if (interval.start >= lastEnd) {
+                selected.push(interval);
+                lastEnd = interval.end;
+              }
+            }
+            return {
+              headline: `最多选择 ${selected.length} 个`,
+              chips: [
+                { label: "区间数", value: items.length },
+                { label: "最后结束", value: lastEnd }
+              ],
+              detail: `选择区间：${selected.map(item => `[${item.start}, ${item.end}]`).join("  ")}\n\n原编号：${selected.map(item => `#${item.index}`).join(", ")}`
+            };
+          }
+        },
+        {
+          id: "closest-pair",
+          category: "divide-conquer",
+          name: "最近点对",
+          symbol: "d²",
+          summary: "扫描平面点集，计算欧氏距离最近的一对点及距离。",
+          complexity: "O(n log n) typical",
+          params: [
+            { id: "points", label: "点坐标", type: "textarea", defaultValue: "0 0\n4 0\n1 1\n3 3\n2 4\n8 1\n9 4", hint: "每行：x y", full: true }
+          ],
+          run({ points }) {
+            const list = nonEmptyLines(points, "点").map((line, index) => {
+              const tokens = splitTokens(line);
+              if (tokens.length !== 2) throw new Error(`第 ${index + 1} 行点格式应为：x y`);
+              const x = Number(tokens[0]);
+              const y = Number(tokens[1]);
+              if (!Number.isFinite(x) || !Number.isFinite(y)) throw new Error(`第 ${index + 1} 行坐标非法。`);
+              return { x, y, id: index + 1 };
+            });
+            if (list.length < 2) throw new Error("至少需要两个点。");
+            const sorted = list.slice().sort((a, b) => a.x - b.x || a.y - b.y);
+            let best = Infinity;
+            let pair = null;
+            const active = [];
+            for (const point of sorted) {
+              const limit = Math.sqrt(best);
+              let write = 0;
+              for (let i = 0; i < active.length; i++) {
+                if (point.x - active[i].x < limit) active[write++] = active[i];
+              }
+              active.length = write;
+              for (const other of active) {
+                if (Math.abs(point.y - other.y) >= limit) continue;
+                const distance = Math.hypot(point.x - other.x, point.y - other.y);
+                if (distance < best) {
+                  best = distance;
+                  pair = [other, point];
+                }
+              }
+              active.push(point);
+            }
+            return {
+              headline: `最近距离 = ${formatNumber(best)}`,
+              chips: [
+                { label: "点数", value: list.length },
+                { label: "距离²", value: formatNumber(best * best) }
+              ],
+              detail: `点 #${pair[0].id} (${pair[0].x}, ${pair[0].y})\n点 #${pair[1].id} (${pair[1].x}, ${pair[1].y})\n欧氏距离：${formatNumber(best)}`
+            };
+          }
+        },
+        {
+          id: "convex-hull",
+          category: "geometry",
+          name: "二维凸包",
+          symbol: "Hull",
+          summary: "使用 Andrew 单调链求平面点集的凸包，并输出逆时针顶点序列。",
+          complexity: "O(n log n)",
+          params: [
+            { id: "points", label: "点坐标", type: "textarea", defaultValue: "0 0\n4 0\n4 4\n0 4\n1 1\n2 2\n3 3\n2 1", hint: "每行：x y；重复点会去重", full: true }
+          ],
+          run({ points }) {
+            const list = nonEmptyLines(points, "点").map((line, index) => {
+              const tokens = splitTokens(line);
+              if (tokens.length !== 2) throw new Error(`第 ${index + 1} 行点格式应为：x y`);
+              const x = Number(tokens[0]);
+              const y = Number(tokens[1]);
+              if (!Number.isFinite(x) || !Number.isFinite(y)) throw new Error(`第 ${index + 1} 行坐标非法。`);
+              return { x, y };
+            });
+            const uniq = [...new Map(list.map(point => [`${point.x},${point.y}`, point])).values()]
+              .sort((a, b) => a.x - b.x || a.y - b.y);
+            if (uniq.length < 3) throw new Error("至少需要三个不重复的点。");
+            const cross = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+            const lower = [];
+            for (const point of uniq) {
+              while (lower.length >= 2 && cross(lower.at(-2), lower.at(-1), point) <= 0) lower.pop();
+              lower.push(point);
+            }
+            const upper = [];
+            for (let i = uniq.length - 1; i >= 0; i--) {
+              const point = uniq[i];
+              while (upper.length >= 2 && cross(upper.at(-2), upper.at(-1), point) <= 0) upper.pop();
+              upper.push(point);
+            }
+            lower.pop();
+            upper.pop();
+            const hull = lower.concat(upper);
+            if (hull.length < 3) throw new Error("所有点共线，无法构成二维凸包。");
+            let area2 = 0;
+            for (let i = 0; i < hull.length; i++) {
+              const a = hull[i];
+              const b = hull[(i + 1) % hull.length];
+              area2 += a.x * b.y - a.y * b.x;
+            }
+            return {
+              headline: `凸包包含 ${hull.length} 个顶点`,
+              chips: [
+                { label: "点集", value: uniq.length },
+                { label: "面积", value: formatNumber(Math.abs(area2) / 2) }
+              ],
+              detail: `逆时针顶点：\n${hull.map((point, index) => `P${index + 1} (${point.x}, ${point.y})`).join("\n")}`
+            };
+          }
+        }
+      ];
+
+      const TEMPLATES = [
+        {
+          id: "nt-gcd-exgcd",
+          category: "number-theory",
+          name: "gcd / exgcd / 模逆元",
+          summary: "整数最大公约数、最小公倍数、扩展欧几里得与模逆元，使用 64 位整数。",
+          complexity: "O(log min(a,b))",
+          tags: ["gcd", "exgcd", "模逆元"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+using int64 = long long;
+
+int64 gcd64(int64 a, int64 b) {
+    a = llabs(a), b = llabs(b);
+    while (b) {
+        int64 t = a % b;
+        a = b;
+        b = t;
+    }
+    return a;
+}
+
+int64 lcm64(int64 a, int64 b) {
+    if (a == 0 || b == 0) return 0;
+    return llabs(a / gcd64(a, b) * b);
+}
+
+// 返回 gcd(a,b)=g，并求出 ax+by=g 的一组解。
+int64 exgcd(int64 a, int64 b, int64 &x, int64 &y) {
+    if (b == 0) {
+        x = 1, y = 0;
+        return a;
+    }
+    int64 x1, y1;
+    int64 g = exgcd(b, a % b, x1, y1);
+    x = y1;
+    y = x1 - (a / b) * y1;
+    return g;
+}
+
+// a 在模 mod 下的逆元，要求 gcd(a,mod)=1。
+int64 inv_mod(int64 a, int64 mod) {
+    int64 x, y;
+    int64 g = exgcd(((a % mod) + mod) % mod, mod, x, y);
+    if (g != 1) return -1;
+    return ((x % mod) + mod) % mod;
+}`
+        },
+        {
+          id: "nt-sieve-phi",
+          category: "number-theory",
+          name: "线性筛与欧拉函数",
+          summary: "一次筛出素数、最小质因子与欧拉函数，适合多个数论预处理需求。",
+          complexity: "O(n)",
+          tags: ["线性筛", "质数", "phi"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+struct NumberSieve {
+    int n;
+    vector<int> primes, lp, phi;
+
+    explicit NumberSieve(int n) : n(n), lp(n + 1), phi(n + 1) {
+        phi[1] = 1;
+        for (int i = 2; i <= n; ++i) {
+            if (lp[i] == 0) {
+                lp[i] = i;
+                phi[i] = i - 1;
+                primes.push_back(i);
+            }
+            for (int p : primes) {
+                if (p > lp[i] || 1LL * p * i > n) break;
+                lp[p * i] = p;
+                phi[p * i] = phi[i] * (p == lp[i] ? p : p - 1);
+            }
+        }
+    }
+};`
+        },
+        {
+          id: "nt-ncr",
+          category: "number-theory",
+          name: "组合数预处理",
+          summary: "模质数下的阶乘、逆元与单次组合数查询，适合 n 较大的赛题。",
+          complexity: "O(n) / O(1)",
+          tags: ["组合数", "逆元", "阶乘"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+constexpr int MOD = 1'000'000'007;
+
+struct Combinations {
+    vector<long long> fact, invFact;
+
+    explicit Combinations(int n) : fact(n + 1), invFact(n + 1) {
+        fact[0] = 1;
+        for (int i = 1; i <= n; ++i) fact[i] = fact[i - 1] * i % MOD;
+        invFact[n] = modPow(fact[n], MOD - 2);
+        for (int i = n; i >= 1; --i) invFact[i - 1] = invFact[i] * i % MOD;
+    }
+
+    long long C(int n, int k) const {
+        if (k < 0 || k > n) return 0;
+        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;
+    }
+
+    static long long modPow(long long a, long long b) {
+        long long r = 1;
+        for (; b; b >>= 1, a = a * a % MOD)
+            if (b & 1) r = r * a % MOD;
+        return r;
+    }
+};`
+        },
+        {
+          id: "graph-dijkstra",
+          category: "graph",
+          name: "Dijkstra 堆优化",
+          summary: "非负边权的有向图单源最短路，返回距离数组；不可达为 INF。",
+          complexity: "O((V+E)logV)",
+          tags: ["最短路", "堆", "priority_queue"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+const ll INF = numeric_limits<ll>::max() / 4;
+
+vector<ll> dijkstra(int n, vector<vector<pair<int, int>>> &g, int src) {
+    vector<ll> dist(n, INF);
+    priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<>> pq;
+    dist[src] = 0;
+    pq.emplace(0, src);
+
+    while (!pq.empty()) {
+        auto [du, u] = pq.top();
+        pq.pop();
+        if (du != dist[u]) continue;
+
+        for (auto [v, w] : g[u]) {
+            if (dist[v] > du + w) {
+                dist[v] = du + w;
+                pq.emplace(dist[v], v);
+            }
+        }
+    }
+    return dist;
+}`
+        },
+        {
+          id: "graph-dsu",
+          category: "graph",
+          name: "并查集 DSU",
+          summary: "路径压缩 + 按大小合并，支持连通性、集合大小与动态连边。",
+          complexity: "O(α(n))",
+          tags: ["并查集", "连通块", "DSU"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+struct DSU {
+    vector<int> parent, size;
+
+    explicit DSU(int n) : parent(n + 1), size(n + 1, 1) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find(int x) {
+        return parent[x] == x ? x : parent[x] = find(parent[x]);
+    }
+
+    bool unite(int a, int b) {
+        a = find(a), b = find(b);
+        if (a == b) return false;
+        if (size[a] < size[b]) swap(a, b);
+        parent[b] = a;
+        size[a] += size[b];
+        return true;
+    }
+
+    bool same(int a, int b) { return find(a) == find(b); }
+};`
+        },
+        {
+          id: "graph-topo",
+          category: "graph",
+          name: "拓扑排序",
+          summary: "Kahn 算法输出任意一个拓扑序；返回空数组表示存在有向环。",
+          complexity: "O(V+E)",
+          tags: ["DAG", "拓扑排序", "入度"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> topo_sort(int n, const vector<vector<int>> &g) {
+    vector<int> indeg(n + 1);
+    for (int u = 1; u <= n; ++u)
+        for (int v : g[u]) ++indeg[v];
+
+    queue<int> q;
+    for (int i = 1; i <= n; ++i)
+        if (indeg[i] == 0) q.push(i);
+
+    vector<int> order;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        order.push_back(u);
+        for (int v : g[u])
+            if (--indeg[v] == 0) q.push(v);
+    }
+
+    if ((int)order.size() != n) return {};
+    return order;
+}`
+        },
+        {
+          id: "dp-knapsack",
+          category: "dp",
+          name: "0/1 背包",
+          summary: "一维滚动数组优化，values 和 weights 使用 0-indexed 下标。",
+          complexity: "O(nC)",
+          tags: ["背包", "滚动数组", "DP"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+long long knapsack01(int capacity,
+                     const vector<int> &weight,
+                     const vector<long long> &value) {
+    vector<long long> dp(capacity + 1, 0);
+    for (int i = 0; i < (int)weight.size(); ++i) {
+        for (int c = capacity; c >= weight[i]; --c) {
+            dp[c] = max(dp[c], dp[c - weight[i]] + value[i]);
+        }
+    }
+    return dp[capacity];
+}`
+        },
+        {
+          id: "dp-lis",
+          category: "dp",
+          name: "最长上升子序列",
+          summary: "tails 二分维护最小可能的结尾，求严格 LIS 长度。",
+          complexity: "O(nlogn)",
+          tags: ["LIS", "二分", "DP"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+int lis_length(const vector<int> &a) {
+    vector<int> tail;
+    for (int x : a) {
+        auto it = lower_bound(tail.begin(), tail.end(), x);
+        if (it == tail.end()) tail.push_back(x);
+        else *it = x;
+    }
+    return (int)tail.size();
+}
+
+// 非降子序列把 lower_bound 改成 upper_bound。`
+        },
+        {
+          id: "dp-edit-distance",
+          category: "dp",
+          name: "编辑距离",
+          summary: "插入、删除、替换三种操作下的最小编辑次数，使用滚动数组。",
+          complexity: "O(nm)",
+          tags: ["字符串DP", "编辑距离", "滚动数组"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+int edit_distance(const string &a, const string &b) {
+    int n = a.size(), m = b.size();
+    vector<int> prev(m + 1), cur(m + 1);
+    iota(prev.begin(), prev.end(), 0);
+
+    for (int i = 1; i <= n; ++i) {
+        cur[0] = i;
+        for (int j = 1; j <= m; ++j) {
+            cur[j] = min({
+                prev[j] + 1,
+                cur[j - 1] + 1,
+                prev[j - 1] + (a[i - 1] != b[j - 1])
+            });
+        }
+        swap(prev, cur);
+    }
+    return prev[m];
+}`
+        },
+        {
+          id: "string-kmp",
+          category: "string",
+          name: "KMP 匹配",
+          summary: "构建前缀函数并返回模式串在主串中的所有 0-indexed 起始位置。",
+          complexity: "O(n+m)",
+          tags: ["KMP", "字符串匹配", "前缀函数"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> prefix_function(const string &s) {
+    vector<int> pi(s.size());
+    for (int i = 1, j = 0; i < (int)s.size(); ++i) {
+        while (j > 0 && s[i] != s[j]) j = pi[j - 1];
+        if (s[i] == s[j]) ++j;
+        pi[i] = j;
+    }
+    return pi;
+}
+
+vector<int> kmp(const string &text, const string &pat) {
+    auto pi = prefix_function(pat);
+    vector<int> pos;
+    for (int i = 0, j = 0; i < (int)text.size(); ++i) {
+        while (j > 0 && text[i] != pat[j]) j = pi[j - 1];
+        if (text[i] == pat[j]) ++j;
+        if (j == (int)pat.size()) {
+            pos.push_back(i - pat.size() + 1);
+            j = pi[j - 1];
+        }
+    }
+    return pos;
+}`
+        },
+        {
+          id: "string-hash",
+          category: "string",
+          name: "双模字符串哈希",
+          summary: "双模数降低碰撞概率，支持常数时间获取任意子串哈希。",
+          complexity: "O(n) / O(1)",
+          tags: ["字符串哈希", "双模", "子串"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+struct DoubleHash {
+    static constexpr int M1 = 1'000'000'007;
+    static constexpr int M2 = 1'000'000'009;
+    static constexpr int BASE = 911382323;
+    vector<int> h1, h2, p1, p2;
+
+    explicit DoubleHash(const string &s) {
+        int n = s.size();
+        h1.assign(n + 1, 0), h2.assign(n + 1, 0);
+        p1.assign(n + 1, 1), p2.assign(n + 1, 1);
+        for (int i = 0; i < n; ++i) {
+            h1[i + 1] = (1LL * h1[i] * BASE + s[i]) % M1;
+            h2[i + 1] = (1LL * h2[i] * BASE + s[i]) % M2;
+            p1[i + 1] = 1LL * p1[i] * BASE % M1;
+            p2[i + 1] = 1LL * p2[i] * BASE % M2;
+        }
+    }
+
+    pair<int, int> get(int l, int r) const { // [l, r)
+        int x = h1[r] - 1LL * h1[l] * p1[r - l] % M1;
+        int y = h2[r] - 1LL * h2[l] * p2[r - l] % M2;
+        if (x < 0) x += M1;
+        if (y < 0) y += M2;
+        return {x, y};
+    }
+};`
+        },
+        {
+          id: "string-trie",
+          category: "string",
+          name: "字典树 Trie",
+          summary: "字符串插入、整词查询与前缀查询，动态扩展节点。",
+          complexity: "O(length)",
+          tags: ["Trie", "前缀", "字符串"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+struct Trie {
+    struct Node {
+        array<int, 26> next{};
+        int count = 0;
+        Node() { next.fill(-1); }
+    };
+    vector<Node> tr{1};
+
+    void insert(const string &s) {
+        int u = 0;
+        for (char ch : s) {
+            int c = ch - 'a';
+            if (tr[u].next[c] == -1) {
+                tr[u].next[c] = tr.size();
+                tr.emplace_back();
+            }
+            u = tr[u].next[c];
+        }
+        ++tr[u].count;
+    }
+
+    bool contains(const string &s) const {
+        int u = 0;
+        for (char ch : s) {
+            u = tr[u].next[ch - 'a'];
+            if (u == -1) return false;
+        }
+        return tr[u].count > 0;
+    }
+};`
+        },
+        {
+          id: "ds-fenwick",
+          category: "data-structure",
+          name: "树状数组",
+          summary: "单点修改与区间求和，支持 long long 累加值。",
+          complexity: "O(logn)",
+          tags: ["BIT", "前缀和", "单点修改"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+struct Fenwick {
+    int n;
+    vector<long long> bit;
+
+    explicit Fenwick(int n) : n(n), bit(n + 1) {}
+
+    void add(int i, long long delta) {
+        for (; i <= n; i += i & -i) bit[i] += delta;
+    }
+
+    long long sumPrefix(int i) const {
+        long long result = 0;
+        for (; i > 0; i -= i & -i) result += bit[i];
+        return result;
+    }
+
+    long long rangeSum(int l, int r) const {
+        return sumPrefix(r) - sumPrefix(l - 1);
+    }
+};`
+        },
+        {
+          id: "ds-segment-tree",
+          category: "data-structure",
+          name: "线段树区间加 / 求和",
+          summary: "懒标记线段树，支持区间加法与区间求和查询。",
+          complexity: "O(logn)",
+          tags: ["线段树", "懒标记", "区间加"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+struct SegTree {
+    int n;
+    vector<long long> sum, lazy;
+
+    explicit SegTree(const vector<long long> &a) : n(a.size()), sum(n << 2), lazy(n << 2) {
+        build(1, 0, n - 1, a);
+    }
+
+    void apply(int p, int len, long long val) {
+        sum[p] += val * len;
+        lazy[p] += val;
+    }
+
+    void push(int p, int len) {
+        if (!lazy[p] || len == 1) return;
+        int half = len / 2;
+        apply(p << 1, half, lazy[p]);
+        apply(p << 1 | 1, len - half, lazy[p]);
+        lazy[p] = 0;
+    }
+
+    void build(int p, int l, int r, const vector<long long> &a) {
+        if (l == r) return void(sum[p] = a[l]);
+        int mid = (l + r) >> 1;
+        build(p << 1, l, mid, a);
+        build(p << 1 | 1, mid + 1, r, a);
+        sum[p] = sum[p << 1] + sum[p << 1 | 1];
+    }
+
+    void add(int ql, int qr, long long val, int p = 1, int l = 0, int r = -1) {
+        if (r == -1) r = n - 1;
+        if (ql <= l && r <= qr) return apply(p, r - l + 1, val);
+        push(p, r - l + 1);
+        int mid = (l + r) >> 1;
+        if (ql <= mid) add(ql, qr, val, p << 1, l, mid);
+        if (qr > mid) add(ql, qr, val, p << 1 | 1, mid + 1, r);
+        sum[p] = sum[p << 1] + sum[p << 1 | 1];
+    }
+
+    long long query(int ql, int qr, int p = 1, int l = 0, int r = -1) {
+        if (r == -1) r = n - 1;
+        if (ql <= l && r <= qr) return sum[p];
+        push(p, r - l + 1);
+        int mid = (l + r) >> 1;
+        long long result = 0;
+        if (ql <= mid) result += query(ql, qr, p << 1, l, mid);
+        if (qr > mid) result += query(ql, qr, p << 1 | 1, mid + 1, r);
+        return result;
+    }
+};`
+        },
+        {
+          id: "ds-monotonic-queue",
+          category: "data-structure",
+          name: "单调队列滑窗最值",
+          summary: "维护固定长度窗口最小值，deque 存储下标并保持单调。",
+          complexity: "O(n)",
+          tags: ["单调队列", "滑动窗口", "最值"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> sliding_min(const vector<int> &a, int k) {
+    deque<int> q;
+    vector<int> result;
+
+    for (int i = 0; i < (int)a.size(); ++i) {
+        while (!q.empty() && q.front() <= i - k) q.pop_front();
+        while (!q.empty() && a[q.back()] >= a[i]) q.pop_back();
+        q.push_back(i);
+        if (i >= k - 1) result.push_back(a[q.front()]);
+    }
+    return result;
+}`
+        },
+        {
+          id: "greedy-intervals",
+          category: "greedy",
+          name: "最多不重叠区间",
+          summary: "按右端点升序选择，求最多数量的闭区间。",
+          complexity: "O(nlogn)",
+          tags: ["区间调度", "贪心", "排序"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+int max_non_overlapping(vector<pair<int, int>> intervals) {
+    sort(intervals.begin(), intervals.end(), [](auto &a, auto &b) {
+        return a.second != b.second ? a.second < b.second : a.first < b.first;
+    });
+
+    int count = 0;
+    int lastEnd = numeric_limits<int>::min();
+    for (auto [l, r] : intervals) {
+        if (l >= lastEnd) {
+            ++count;
+            lastEnd = r;
+        }
+    }
+    return count;
+}`
+        },
+        {
+          id: "greedy-merge-intervals",
+          category: "greedy",
+          name: "合并区间",
+          summary: "排序后线性合并相交或相邻区间，返回去重后的新区间列表。",
+          complexity: "O(nlogn)",
+          tags: ["区间合并", "排序", "贪心"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+vector<pair<int, int>> merge_intervals(vector<pair<int, int>> a) {
+    if (a.empty()) return {};
+    sort(a.begin(), a.end());
+
+    vector<pair<int, int>> result;
+    for (auto [l, r] : a) {
+        if (result.empty() || l > result.back().second) {
+            result.emplace_back(l, r);
+        } else {
+            result.back().second = max(result.back().second, r);
+        }
+    }
+    return result;
+}`
+        },
+        {
+          id: "greedy-deadline",
+          category: "greedy",
+          name: "带截止时间任务",
+          summary: "按截止时间排序并用小根堆保留收益最高的任务，适合单位时间单机调度。",
+          complexity: "O(nlogn)",
+          tags: ["任务调度", "堆", "贪心"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+// 任务在截止时间前占一个单位时间，最大化总收益。
+long long max_profit(vector<pair<int, int>> jobs) { // {deadline, profit}
+    sort(jobs.begin(), jobs.end());
+    priority_queue<int, vector<int>, greater<int>> selected;
+    long long total = 0;
+
+    for (auto [deadline, profit] : jobs) {
+        selected.push(profit);
+        total += profit;
+        if ((int)selected.size() > deadline) {
+            total -= selected.top();
+            selected.pop();
+        }
+    }
+    return total;
+}`
+        },
+        {
+          id: "dc-merge-inversions",
+          category: "divide-conquer",
+          name: "归并排序 / 逆序对",
+          summary: "在归并过程中统计逆序对数量，同时得到升序数组。",
+          complexity: "O(nlogn)",
+          tags: ["归并排序", "逆序对", "分治"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+long long merge_count(vector<long long> &a, vector<long long> &tmp, int l, int r) {
+    if (r - l <= 1) return 0;
+    int mid = (l + r) >> 1;
+    long long result = merge_count(a, tmp, l, mid) + merge_count(a, tmp, mid, r);
+
+    int i = l, j = mid, k = l;
+    while (i < mid && j < r) {
+        if (a[i] <= a[j]) {
+            tmp[k++] = a[i++];
+        } else {
+            tmp[k++] = a[j++];
+            result += mid - i;
+        }
+    }
+    while (i < mid) tmp[k++] = a[i++];
+    while (j < r) tmp[k++] = a[j++];
+    copy(tmp.begin() + l, tmp.begin() + r, a.begin() + l);
+    return result;
+}
+
+long long inversion_count(vector<long long> a) {
+    vector<long long> tmp(a.size());
+    return merge_count(a, tmp, 0, a.size());
+}`
+        },
+        {
+          id: "dc-binary-search",
+          category: "divide-conquer",
+          name: "二分查找边界",
+          summary: "返回第一个大于等于 x 的位置与第一个大于 x 的位置，适用于有序数组。",
+          complexity: "O(logn)",
+          tags: ["二分", "lower_bound", "边界"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+int first_ge(const vector<int> &a, int x) {
+    int l = 0, r = a.size();
+    while (l < r) {
+        int mid = l + (r - l) / 2;
+        if (a[mid] >= x) r = mid;
+        else l = mid + 1;
+    }
+    return l;
+}
+
+int first_gt(const vector<int> &a, int x) {
+    int l = 0, r = a.size();
+    while (l < r) {
+        int mid = l + (r - l) / 2;
+        if (a[mid] > x) r = mid;
+        else l = mid + 1;
+    }
+    return l;
+}`
+        },
+        {
+          id: "dc-closest-pair",
+          category: "divide-conquer",
+          name: "分治最近点对",
+          summary: "按 x 坐标分治，只比较中带上的候选点，求平面最近点对距离平方。",
+          complexity: "O(nlogn)",
+          tags: ["最近点对", "分治", "平面点"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+struct Point { ll x, y; };
+
+ll dist2(const Point &a, const Point &b) {
+    ll dx = a.x - b.x, dy = a.y - b.y;
+    return dx * dx + dy * dy;
+}
+
+ll solve(vector<Point> &p, int l, int r) {
+    if (r - l <= 1) return numeric_limits<ll>::max();
+    if (r - l == 2) return dist2(p[l], p[l + 1]);
+    int mid = (l + r) >> 1;
+    ll midX = p[mid].x;
+    ll best = min(solve(p, l, mid), solve(p, mid, r));
+    inplace_merge(p.begin() + l, p.begin() + mid, p.begin() + r,
+                  [](const Point &a, const Point &b) { return a.y < b.y; });
+
+    vector<Point> strip;
+    for (int i = l; i < r; ++i)
+        if ((p[i].x - midX) * (p[i].x - midX) < best)
+            strip.push_back(p[i]);
+    for (int i = 0; i < (int)strip.size(); ++i)
+        for (int j = i + 1; j < (int)strip.size() && j <= i + 7; ++j)
+            best = min(best, dist2(strip[i], strip[j]));
+    return best;
+}`
+        },
+        {
+          id: "cg-vector",
+          category: "geometry",
+          name: "向量与叉积基础",
+          summary: "点、向量基本运算、叉积方向、点在线段上的判断与浮点符号函数。",
+          complexity: "O(1)",
+          tags: ["向量", "叉积", "EPS"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+constexpr double EPS = 1e-9;
+int sgn(double x) { return (x > EPS) - (x < -EPS); }
+
+struct Vec {
+    double x, y;
+    Vec operator+(Vec o) const { return {x + o.x, y + o.y}; }
+    Vec operator-(Vec o) const { return {x - o.x, y - o.y}; }
+    Vec operator*(double k) const { return {x * k, y * k}; }
+    double dot(Vec o) const { return x * o.x + y * o.y; }
+    double cross(Vec o) const { return x * o.y - y * o.x; }
+    double norm() const { return hypot(x, y); }
+};
+
+double cross(Vec a, Vec b, Vec c) { return (b - a).cross(c - a); }
+
+bool on_segment(Vec a, Vec b, Vec p) {
+    return sgn(cross(a, b, p)) == 0 &&
+           sgn((p - a).dot(p - b)) <= 0;
+}`
+        },
+        {
+          id: "cg-convex-hull",
+          category: "geometry",
+          name: "Andrew 凸包",
+          summary: "整数坐标凸包，自动去重并返回逆时针顶点序列，可用叉积判断共线。",
+          complexity: "O(nlogn)",
+          tags: ["凸包", "Andrew", "单调链"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+struct Point { ll x, y; };
+
+ll cross(Point o, Point a, Point b) {
+    return (a.x - o.x) * (b.y - o.y)
+         - (a.y - o.y) * (b.x - o.x);
+}
+
+vector<Point> convex_hull(vector<Point> p) {
+    sort(p.begin(), p.end(), [](auto &a, auto &b) {
+        return a.x != b.x ? a.x < b.x : a.y < b.y;
+    });
+    p.erase(unique(p.begin(), p.end(), [](auto &a, auto &b) {
+        return a.x == b.x && a.y == b.y;
+    }), p.end());
+    if (p.size() <= 1) return p;
+
+    vector<Point> h(2 * p.size());
+    int k = 0;
+    for (auto pt : p) {
+        while (k >= 2 && cross(h[k - 2], h[k - 1], pt) <= 0) --k;
+        h[k++] = pt;
+    }
+    for (int i = p.size() - 2, t = k + 1; i >= 0; --i) {
+        while (k >= t && cross(h[k - 2], h[k - 1], p[i]) <= 0) --k;
+        h[k++] = p[i];
+    }
+    h.resize(k - 1);
+    return h;
+}`
+        },
+        {
+          id: "cg-segment-intersection",
+          category: "geometry",
+          name: "线段相交判定",
+          summary: "整数坐标下的规范相交与端点接触判定，避免浮点误差。",
+          complexity: "O(1)",
+          tags: ["线段相交", "叉积", "整数几何"],
+          code: `#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+struct Point { ll x, y; };
+
+ll cross(Point o, Point a, Point b) {
+    return (a.x - o.x) * (b.y - o.y)
+         - (a.y - o.y) * (b.x - o.x);
+}
+
+bool on_segment(Point a, Point b, Point p) {
+    return cross(a, b, p) == 0 &&
+           min(a.x, b.x) <= p.x && p.x <= max(a.x, b.x) &&
+           min(a.y, b.y) <= p.y && p.y <= max(a.y, b.y);
+}
+
+bool intersect(Point a, Point b, Point c, Point d) {
+    ll c1 = cross(a, b, c), c2 = cross(a, b, d);
+    ll c3 = cross(c, d, a), c4 = cross(c, d, b);
+
+    if (((c1 > 0 && c2 < 0) || (c1 < 0 && c2 > 0)) &&
+        ((c3 > 0 && c4 < 0) || (c3 < 0 && c4 > 0))) return true;
+
+    return (c1 == 0 && on_segment(a, b, c)) ||
+           (c2 == 0 && on_segment(a, b, d)) ||
+           (c3 == 0 && on_segment(c, d, a)) ||
+           (c4 == 0 && on_segment(c, d, b));
+}`
+        }
+      ];
+
+      TEMPLATES.forEach(template => BUILTIN_TEMPLATE_IDS.add(template.id));
+
+      const state = {
+        view: "simulator",
+        algorithmCategory: "all",
+        algorithmSearch: "",
+        selectedAlgorithmId: readStorage(SELECTED_ALGORITHM_KEY, ALGORITHMS[0]?.id || ""),
+        templateCategory: readStorage(SELECTED_CATEGORY_KEY, "number-theory"),
+        templateSearch: "",
+        lastResultText: "",
+        lastModalTrigger: null
+      };
+
+      if (!CATEGORY_MAP.has(state.templateCategory)) state.templateCategory = "number-theory";
+      if (!ALGORITHMS.some(algorithm => algorithm.id === state.selectedAlgorithmId)) {
+        state.selectedAlgorithmId = ALGORITHMS[0]?.id || "";
+      }
+
+      let customTemplates = [];
+      try {
+        const parsed = JSON.parse(readStorage(CUSTOM_TEMPLATE_KEY, "[]"));
+        if (Array.isArray(parsed)) {
+          customTemplates = parsed.filter(template =>
+            template &&
+            typeof template.id === "string" &&
+            typeof template.name === "string" &&
+            typeof template.code === "string" &&
+            CATEGORY_MAP.has(template.category)
+          );
+        }
+      } catch (_) {
+        customTemplates = [];
+      }
+
+      const getTemplates = () => TEMPLATES.concat(customTemplates);
+      const getAlgorithm = id => ALGORITHMS.find(algorithm => algorithm.id === id);
+
+      const syntaxKeywords = new Set([
+        "alignas", "alignof", "and", "asm", "auto", "bool", "break", "case", "catch", "char", "class",
+        "const", "constexpr", "continue", "decltype", "default", "delete", "do", "double", "else", "enum",
+        "explicit", "export", "extern", "false", "for", "friend", "goto", "if", "inline", "int", "long",
+        "mutable", "namespace", "new", "noexcept", "not", "nullptr", "operator", "or", "private", "protected",
+        "public", "register", "return", "short", "signed", "sizeof", "static", "struct", "switch", "template",
+        "this", "throw", "true", "try", "typedef", "typename", "union", "unsigned", "using", "virtual", "void",
+        "volatile", "while", "override", "final", "requires", "concept", "co_await", "co_return", "co_yield"
+      ]);
+      const syntaxTypes = new Set([
+        "string", "vector", "pair", "set", "map", "unordered_map", "unordered_set", "queue", "deque",
+        "priority_queue", "stack", "array", "list", "optional", "variant", "tuple", "function", "size_t",
+        "int64_t", "uint64_t", "int32_t", "uint32_t", "ll", "ull", "Point", "Vec", "Node", "DSU", "Fenwick",
+        "SegTree", "Trie", "DoubleHash", "NumberSieve", "Combinations"
+      ]);
+
+      function highlightCpp(source) {
+        let result = "";
+        let i = 0;
+        const length = source.length;
+        const isIdentifierStart = ch => /[A-Za-z_]/.test(ch);
+        const isIdentifierPart = ch => /[A-Za-z0-9_]/.test(ch);
+        const sliceEscaped = (start, end) => escapeHtml(source.slice(start, end));
+
+        while (i < length) {
+          const ch = source[i];
+          const next = source[i + 1];
+
+          if (ch === "/" && next === "/") {
+            let end = source.indexOf("\n", i);
+            if (end === -1) end = length;
+            result += `<span class="tok-comment">${sliceEscaped(i, end)}</span>`;
+            i = end;
+            continue;
+          }
+
+          if (ch === "/" && next === "*") {
+            let end = source.indexOf("*/", i + 2);
+            end = end === -1 ? length : end + 2;
+            result += `<span class="tok-comment">${sliceEscaped(i, end)}</span>`;
+            i = end;
+            continue;
+          }
+
+          if (ch === "#") {
+            let end = source.indexOf("\n", i);
+            if (end === -1) end = length;
+            result += `<span class="tok-preproc">${sliceEscaped(i, end)}</span>`;
+            i = end;
+            continue;
+          }
+
+          if (ch === '"' || ch === "'") {
+            const quote = ch;
+            let end = i + 1;
+            while (end < length) {
+              if (source[end] === "\\") {
+                end += 2;
+                continue;
+              }
+              if (source[end] === quote) {
+                end++;
+                break;
+              }
+              if (source[end] === "\n" && quote === "'") break;
+              end++;
+            }
+            result += `<span class="tok-string">${sliceEscaped(i, end)}</span>`;
+            i = end;
+            continue;
+          }
+
+          if (/\d/.test(ch)) {
+            const match = source.slice(i).match(/^(?:0[xX][0-9A-Fa-f']+|0[bB][01']+|\d[\d']*(?:\.\d[\d']*)?(?:[eE][+-]?\d+)?)[uUlLfF]*/);
+            const token = match ? match[0] : ch;
+            result += `<span class="tok-number">${escapeHtml(token)}</span>`;
+            i += token.length;
+            continue;
+          }
+
+          if (isIdentifierStart(ch)) {
+            let end = i + 1;
+            while (end < length && isIdentifierPart(source[end])) end++;
+            const word = source.slice(i, end);
+            if (syntaxKeywords.has(word)) {
+              result += `<span class="tok-keyword">${escapeHtml(word)}</span>`;
+            } else if (syntaxTypes.has(word)) {
+              result += `<span class="tok-type">${escapeHtml(word)}</span>`;
+            } else {
+              let lookahead = end;
+              while (lookahead < length && /\s/.test(source[lookahead])) lookahead++;
+              if (source[lookahead] === "(") result += `<span class="tok-function">${escapeHtml(word)}</span>`;
+              else result += escapeHtml(word);
+            }
+            i = end;
+            continue;
+          }
+
+          result += escapeHtml(ch);
+          i++;
+        }
+        return result;
+      }
+
+      const algorithmList = document.getElementById("algorithmList");
+      const algorithmFilters = document.getElementById("algorithmFilters");
+      const algorithmSearch = document.getElementById("algorithmSearch");
+      const clearAlgorithmSearch = document.getElementById("clearAlgorithmSearch");
+      const visibleAlgorithmCount = document.getElementById("visibleAlgorithmCount");
+      const workbench = document.getElementById("workbench");
+      const templateCategories = document.getElementById("templateCategories");
+      const templateGroups = document.getElementById("templateGroups");
+      const templateSearch = document.getElementById("templateSearch");
+      const clearTemplateSearch = document.getElementById("clearTemplateSearch");
+      const templateModal = document.getElementById("templateModal");
+      const infoModal = document.getElementById("infoModal");
+      const templateForm = document.getElementById("templateForm");
+      const toast = document.getElementById("toast");
+      const toastText = document.getElementById("toastText");
+      let toastTimer = 0;
+
+      function showToast(message, type = "success") {
+        clearTimeout(toastTimer);
+        toastText.textContent = message;
+        toast.classList.toggle("error", type === "error");
+        toast.classList.add("visible");
+        toastTimer = window.setTimeout(() => toast.classList.remove("visible"), 2200);
+      }
+
+      async function copyText(text, successMessage = "已复制到剪贴板") {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const helper = document.createElement("textarea");
+            helper.value = text;
+            helper.setAttribute("readonly", "");
+            helper.style.position = "fixed";
+            helper.style.opacity = "0";
+            document.body.appendChild(helper);
+            helper.select();
+            const copied = document.execCommand("copy");
+            helper.remove();
+            if (!copied) throw new Error("copy command failed");
+          }
+          showToast(successMessage);
+        } catch (_) {
+          showToast("复制失败，请手动选择文本复制", "error");
+        }
+      }
+
+      function switchView(view) {
+        state.view = view === "library" ? "library" : "simulator";
+        document.getElementById("simulatorView").hidden = state.view !== "simulator";
+        document.getElementById("libraryView").hidden = state.view !== "library";
+        document.querySelectorAll(".main-tab").forEach(tab => {
+          tab.setAttribute("aria-selected", String(tab.dataset.view === state.view));
+          tab.tabIndex = tab.dataset.view === state.view ? 0 : -1;
+        });
+        if (state.view === "library") renderTemplates();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function renderAlgorithmFilters() {
+        const filters = [{ id: "all", name: "全部" }, ...CATEGORIES];
+        algorithmFilters.innerHTML = filters.map(category => `
+          <button class="filter-pill ${state.algorithmCategory === category.id ? "active" : ""}"
+                  type="button" data-algorithm-category="${escapeAttr(category.id)}">
+            ${escapeHtml(category.name)}
+          </button>
+        `).join("");
+      }
+
+      function filteredAlgorithms() {
+        const query = state.algorithmSearch.trim().toLowerCase();
+        return ALGORITHMS.filter(algorithm => {
+          if (state.algorithmCategory !== "all" && algorithm.category !== state.algorithmCategory) return false;
+          if (!query) return true;
+          const category = CATEGORY_MAP.get(algorithm.category);
+          return [algorithm.name, algorithm.summary, algorithm.complexity, category?.name || ""]
+            .join(" ")
+            .toLowerCase()
+            .includes(query);
+        });
+      }
+
+      function renderAlgorithmList() {
+        const algorithms = filteredAlgorithms();
+        visibleAlgorithmCount.textContent = `${algorithms.length} ITEMS`;
+        document.getElementById("algorithmCount").textContent = String(ALGORITHMS.length);
+        if (!algorithms.length) {
+          algorithmList.innerHTML = `<div class="empty-list">没有找到匹配的算法。<br>试试其他关键词或分类。</div>`;
+          return;
+        }
+        algorithmList.innerHTML = algorithms.map(algorithm => {
+          const category = CATEGORY_MAP.get(algorithm.category);
+          return `
+            <button class="algorithm-item ${algorithm.id === state.selectedAlgorithmId ? "active" : ""}"
+                    type="button" data-algorithm-id="${escapeAttr(algorithm.id)}">
+              <span class="alg-symbol">${escapeHtml(algorithm.symbol)}</span>
+              <span class="alg-copy">
+                <span class="alg-name">${escapeHtml(algorithm.name)}</span>
+                <span class="alg-meta"><span class="category-mini">${escapeHtml(category?.name || "")}</span><span>·</span><span>${escapeHtml(algorithm.complexity)}</span></span>
+              </span>
+              <span class="alg-chevron" aria-hidden="true">›</span>
+            </button>
+          `;
+        }).join("");
+      }
+
+      function renderParams(algorithm) {
+        return algorithm.params.map(param => {
+          const fieldClass = `field${param.full || param.type === "textarea" ? " full" : ""}`;
+          const common = `id="param-${escapeAttr(param.id)}" name="${escapeAttr(param.id)}"`;
+          const hint = param.hint ? `<small>${escapeHtml(param.hint)}</small>` : "";
+          if (param.type === "textarea") {
+            return `
+              <div class="${fieldClass}">
+                <label for="param-${escapeAttr(param.id)}">${escapeHtml(param.label)}</label>
+                <textarea ${common} rows="4" spellcheck="false">${escapeHtml(param.defaultValue || "")}</textarea>
+                ${hint}
+              </div>
+            `;
+          }
+          const type = param.type === "number" ? "number" : "text";
+          const min = param.min !== undefined ? `min="${escapeAttr(param.min)}"` : "";
+          const max = param.max !== undefined ? `max="${escapeAttr(param.max)}"` : "";
+          return `
+            <div class="${fieldClass}">
+              <label for="param-${escapeAttr(param.id)}">${escapeHtml(param.label)}</label>
+              <input ${common} type="${type}" value="${escapeAttr(param.defaultValue || "")}" ${min} ${max} spellcheck="false">
+              ${hint}
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderWorkbench() {
+        const algorithm = getAlgorithm(state.selectedAlgorithmId) || ALGORITHMS[0];
+        if (!algorithm) {
+          workbench.innerHTML = `<div class="result-empty"><p>当前没有已注册的在线算法。</p></div>`;
+          return;
+        }
+        state.selectedAlgorithmId = algorithm.id;
+        writeStorage(SELECTED_ALGORITHM_KEY, algorithm.id);
+        const category = CATEGORY_MAP.get(algorithm.category);
+        state.lastResultText = "";
+        workbench.innerHTML = `
+          <div class="workbench-head">
+            <div>
+              <div class="workbench-title-row">
+                <h2>${escapeHtml(algorithm.name)}</h2>
+                <span class="category-badge">${escapeHtml(category?.name || "通用")}</span>
+              </div>
+              <p class="workbench-desc">${escapeHtml(algorithm.summary)}</p>
+            </div>
+            <div class="workbench-aside">
+              <span class="complexity">${escapeHtml(algorithm.complexity)}</span>
+              <button class="small-button" id="openRelatedTemplates" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h11l3 3v13H5V4Z"></path><path d="M8 10h8M8 14h6"></path></svg>
+                对应模板
+              </button>
+            </div>
+          </div>
+          <div class="workbench-body">
+            <div class="form-pane">
+              <div class="section-kicker">输入参数 <span>LOCAL COMPUTE</span></div>
+              <form id="algorithmForm" novalidate>
+                <div class="param-grid">${renderParams(algorithm)}</div>
+                <div class="form-actions">
+                  <button class="primary-button" id="runAlgorithm" type="submit">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5-10-6.5Z"></path></svg>
+                    运行算法
+                  </button>
+                  <button class="secondary-button" id="resetParams" type="button">重置</button>
+                  <span class="shortcut-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+                </div>
+              </form>
+            </div>
+            <div class="result-pane">
+              <div class="section-kicker">运行结果 <span>OUTPUT</span></div>
+              <div class="result-shell" id="resultShell">
+                <div class="result-empty">
+                  <div>
+                    <div class="result-empty-icon" aria-hidden="true">_</div>
+                    <strong>等待运行</strong>
+                    <p>填写左侧参数后运行算法。输入只在本页内存中处理。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("openRelatedTemplates").addEventListener("click", () => {
+          state.templateCategory = algorithm.category;
+          writeStorage(SELECTED_CATEGORY_KEY, state.templateCategory);
+          switchView("library");
+          renderTemplateCategories();
+          renderTemplates();
+        });
+
+        const form = document.getElementById("algorithmForm");
+        form.addEventListener("submit", event => {
+          event.preventDefault();
+          executeAlgorithm(algorithm);
+        });
+        form.addEventListener("keydown", event => {
+          if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+            event.preventDefault();
+            executeAlgorithm(algorithm);
+          }
+        });
+        document.getElementById("resetParams").addEventListener("click", () => renderWorkbench());
+      }
+
+      function executeAlgorithm(algorithm) {
+        const form = document.getElementById("algorithmForm");
+        const runButton = document.getElementById("runAlgorithm");
+        const shell = document.getElementById("resultShell");
+        if (!form || !runButton || !shell) return;
+        const formData = new FormData(form);
+        const args = Object.fromEntries(formData.entries());
+        runButton.disabled = true;
+        const started = performance.now();
+
+        window.setTimeout(() => {
+          try {
+            const result = algorithm.run(args);
+            const elapsed = performance.now() - started;
+            const normalized = typeof result === "string" ? { headline: result } : result;
+            const headline = normalized.headline ?? "计算完成";
+            const chips = Array.isArray(normalized.chips) ? normalized.chips : [];
+            const detail = normalized.detail ? String(normalized.detail) : "";
+            state.lastResultText = [headline, ...chips.map(chip => `${chip.label}: ${chip.value}`), detail].filter(Boolean).join("\n");
+            shell.innerHTML = `
+              <div class="result-content">
+                <div class="result-topline">
+                  <span class="result-label">计算完成</span>
+                  <span class="result-time">${escapeHtml(formatElapsed(elapsed))}</span>
+                </div>
+                <div class="result-headline">${escapeHtml(headline)}</div>
+                ${chips.length ? `<div class="result-chips">${chips.map(chip => `<span class="result-chip"><span>${escapeHtml(chip.label)}</span><b>${escapeHtml(chip.value)}</b></span>`).join("")}</div>` : ""}
+                ${detail ? `<pre class="result-detail">${escapeHtml(detail)}</pre>` : ""}
+              </div>
+              <div class="result-footer">
+                <span>本地计算 · 输入未离开浏览器</span>
+                <button class="copy-result" id="copyCalcResult" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg>
+                  复制结果
+                </button>
+              </div>
+            `;
+            document.getElementById("copyCalcResult").addEventListener("click", () => copyText(state.lastResultText, "运行结果已复制"));
+          } catch (error) {
+            shell.innerHTML = `
+              <div class="result-content">
+                <div class="result-topline">
+                  <span class="result-label" style="color:var(--danger)">无法计算</span>
+                </div>
+                <div class="result-error">
+                  <strong>输入或计算存在错误</strong>
+                  ${escapeHtml(error instanceof Error ? error.message : String(error))}
+                </div>
+              </div>
+            `;
+          } finally {
+            runButton.disabled = false;
+          }
+        }, 20);
+      }
+
+      function templateMatches(template, query) {
+        if (!query) return true;
+        return [
+          template.name,
+          template.summary,
+          template.complexity,
+          ...(template.tags || []),
+          template.code,
+          CATEGORY_MAP.get(template.category)?.name || ""
+        ].join(" ").toLowerCase().includes(query);
+      }
+
+      function templateCard(template) {
+        const isCustom = !BUILTIN_TEMPLATE_IDS.has(template.id);
+        return `
+          <article class="template-card" data-template-card="${escapeAttr(template.id)}">
+            <div class="template-card-head">
+              <div>
+                <h3>${escapeHtml(template.name)}</h3>
+                <p class="template-summary">${escapeHtml(template.summary || "自定义 C++ 模板")}</p>
+              </div>
+              <div class="card-actions">
+                <button class="copy-template" type="button" data-copy-template="${escapeAttr(template.id)}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg>
+                  复制
+                </button>
+                ${isCustom ? `
+                  <button class="delete-template" type="button" data-delete-template="${escapeAttr(template.id)}" aria-label="删除自定义模板 ${escapeAttr(template.name)}" title="删除自定义模板">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"></path></svg>
+                  </button>
+                ` : ""}
+              </div>
+            </div>
+            <div class="template-tags">
+              ${template.complexity ? `<span class="template-tag complexity-tag">${escapeHtml(template.complexity)}</span>` : ""}
+              ${(template.tags || []).map(tag => `<span class="template-tag">${escapeHtml(tag)}</span>`).join("")}
+            </div>
+            <details class="template-code">
+              <summary>展开 C++ 代码</summary>
+              <pre><code>${highlightCpp(template.code)}</code></pre>
+            </details>
+          </article>
+        `;
+      }
+
+      function addTemplateSlot(category) {
+        return `
+          <button class="add-template-slot" type="button" data-add-template-category="${escapeAttr(category.id)}">
+            <span class="add-symbol" aria-hidden="true">+</span>
+            <strong>新增 ${escapeHtml(category.name)} 模板</strong>
+            <span>保留分类扩展位 · 保存到本地浏览器</span>
+          </button>
+        `;
+      }
+
+      function renderTemplateCategories() {
+        const allTemplates = getTemplates();
+        const total = allTemplates.length;
+        const items = [
+          { id: "all", name: "全部", count: total },
+          ...CATEGORIES.map(category => ({
+            ...category,
+            count: allTemplates.filter(template => template.category === category.id).length
+          }))
+        ];
+        templateCategories.innerHTML = items.map(category => `
+          <button class="category-tab ${state.templateCategory === category.id ? "active" : ""}"
+                  type="button" role="tab" aria-selected="${state.templateCategory === category.id}"
+                  data-template-category="${escapeAttr(category.id)}">
+            ${escapeHtml(category.name)}
+            <span class="category-tab-count">${category.count}</span>
+          </button>
+        `).join("");
+        document.getElementById("templateCount").textContent = String(total);
+        document.getElementById("customTemplateCount").textContent = String(customTemplates.length);
+      }
+
+      function renderTemplates() {
+        renderTemplateCategories();
+        const allTemplates = getTemplates();
+        const query = state.templateSearch.trim().toLowerCase();
+        const activeCategory = state.templateCategory === "all" ? null : CATEGORY_MAP.get(state.templateCategory);
+        const visible = allTemplates.filter(template => {
+          if (state.templateCategory !== "all" && template.category !== state.templateCategory) return false;
+          return templateMatches(template, query);
+        });
+        const metaText = document.getElementById("templateMetaText");
+        metaText.innerHTML = `当前显示 <strong>${visible.length}</strong> 个模板${query ? ` · 关键词 “${escapeHtml(state.templateSearch.trim())}”` : ""}`;
+
+        if (!visible.length) {
+          templateGroups.innerHTML = `
+            <div class="empty-library">
+              <div>
+                <strong>没有找到匹配的模板</strong>
+                <p>调整关键词，或在当前分类新增一个本地模板。</p>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        const categoriesToRender = activeCategory ? [activeCategory] : CATEGORIES;
+        templateGroups.innerHTML = categoriesToRender.map(category => {
+          const categoryTemplates = visible.filter(template => template.category === category.id);
+          if (state.templateCategory === "all" && !categoryTemplates.length && query) return "";
+          return `
+            <section class="template-section" aria-labelledby="template-heading-${escapeAttr(category.id)}">
+              <div class="template-group-head">
+                <span class="category-mark">${escapeHtml(category.short)}</span>
+                <h2 id="template-heading-${escapeAttr(category.id)}">${escapeHtml(category.name)}</h2>
+                <span class="group-line"></span>
+                <span class="group-count">${categoryTemplates.length} TEMPLATES</span>
+              </div>
+              <div class="template-grid">
+                ${categoryTemplates.map(templateCard).join("")}
+                ${addTemplateSlot(category)}
+              </div>
+            </section>
+          `;
+        }).join("");
+      }
+
+      function openModal(modal, trigger) {
+        state.lastModalTrigger = trigger || document.activeElement;
+        modal.hidden = false;
+        document.body.style.overflow = "hidden";
+        const firstFocusable = modal.querySelector("input, textarea, select, button");
+        window.setTimeout(() => firstFocusable?.focus(), 30);
+      }
+
+      function closeModal(modal) {
+        modal.hidden = true;
+        if (templateModal.hidden && infoModal.hidden) document.body.style.overflow = "";
+        if (state.lastModalTrigger && typeof state.lastModalTrigger.focus === "function") {
+          state.lastModalTrigger.focus();
+        }
+      }
+
+      function openTemplateModal(categoryId = state.templateCategory === "all" ? "number-theory" : state.templateCategory, trigger) {
+        const select = document.getElementById("newTemplateCategory");
+        select.innerHTML = CATEGORIES.map(category => `<option value="${escapeAttr(category.id)}">${escapeHtml(category.name)}</option>`).join("");
+        select.value = CATEGORY_MAP.has(categoryId) ? categoryId : "number-theory";
+        templateForm.reset();
+        select.value = CATEGORY_MAP.has(categoryId) ? categoryId : "number-theory";
+        openModal(templateModal, trigger);
+      }
+
+      templateForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const data = new FormData(templateForm);
+        const name = String(data.get("name") || "").trim();
+        const code = String(data.get("code") || "").trim();
+        const category = String(data.get("category") || "");
+        if (!name || !code) {
+          showToast("模板名称和代码不能为空", "error");
+          return;
+        }
+        if (!CATEGORY_MAP.has(category)) {
+          showToast("请选择有效的模板分类", "error");
+          return;
+        }
+        const id = `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        customTemplates.push({
+          id,
+          category,
+          name,
+          summary: String(data.get("summary") || "").trim() || "本地自定义模板",
+          complexity: String(data.get("complexity") || "").trim(),
+          tags: String(data.get("tags") || "").split(/[,，]/).map(tag => tag.trim()).filter(Boolean).slice(0, 8),
+          code
+        });
+        writeStorage(CUSTOM_TEMPLATE_KEY, JSON.stringify(customTemplates));
+        state.templateCategory = category;
+        writeStorage(SELECTED_CATEGORY_KEY, category);
+        closeModal(templateModal);
+        renderTemplates();
+        showToast("模板已保存到当前浏览器");
+      });
+
+      algorithmFilters.addEventListener("click", event => {
+        const button = event.target.closest("[data-algorithm-category]");
+        if (!button) return;
+        state.algorithmCategory = button.dataset.algorithmCategory;
+        renderAlgorithmFilters();
+        renderAlgorithmList();
+      });
+
+      algorithmList.addEventListener("click", event => {
+        const button = event.target.closest("[data-algorithm-id]");
+        if (!button) return;
+        const id = button.dataset.algorithmId;
+        if (id === state.selectedAlgorithmId) return;
+        state.selectedAlgorithmId = id;
+        renderAlgorithmList();
+        renderWorkbench();
+      });
+
+      algorithmSearch.addEventListener("input", () => {
+        state.algorithmSearch = algorithmSearch.value;
+        clearAlgorithmSearch.classList.toggle("visible", Boolean(state.algorithmSearch));
+        renderAlgorithmList();
+      });
+
+      clearAlgorithmSearch.addEventListener("click", () => {
+        state.algorithmSearch = "";
+        algorithmSearch.value = "";
+        clearAlgorithmSearch.classList.remove("visible");
+        renderAlgorithmList();
+        algorithmSearch.focus();
+      });
+
+      templateSearch.addEventListener("input", () => {
+        state.templateSearch = templateSearch.value;
+        clearTemplateSearch.classList.toggle("visible", Boolean(state.templateSearch));
+        renderTemplates();
+      });
+
+      clearTemplateSearch.addEventListener("click", () => {
+        state.templateSearch = "";
+        templateSearch.value = "";
+        clearTemplateSearch.classList.remove("visible");
+        renderTemplates();
+        templateSearch.focus();
+      });
+
+      templateCategories.addEventListener("click", event => {
+        const button = event.target.closest("[data-template-category]");
+        if (!button) return;
+        state.templateCategory = button.dataset.templateCategory;
+        writeStorage(SELECTED_CATEGORY_KEY, state.templateCategory);
+        renderTemplates();
+      });
+
+      templateGroups.addEventListener("click", event => {
+        const copyButton = event.target.closest("[data-copy-template]");
+        if (copyButton) {
+          const template = getTemplates().find(item => item.id === copyButton.dataset.copyTemplate);
+          if (template) copyText(template.code, `已复制「${template.name}」`);
+          return;
+        }
+
+        const deleteButton = event.target.closest("[data-delete-template]");
+        if (deleteButton) {
+          const id = deleteButton.dataset.deleteTemplate;
+          const template = customTemplates.find(item => item.id === id);
+          if (!template) return;
+          if (!window.confirm(`确定删除自定义模板「${template.name}」吗？`)) return;
+          customTemplates = customTemplates.filter(item => item.id !== id);
+          writeStorage(CUSTOM_TEMPLATE_KEY, JSON.stringify(customTemplates));
+          renderTemplates();
+          showToast("自定义模板已删除");
+          return;
+        }
+
+        const addButton = event.target.closest("[data-add-template-category]");
+        if (addButton) openTemplateModal(addButton.dataset.addTemplateCategory, addButton);
+      });
+
+      document.querySelectorAll(".main-tab").forEach(tab => {
+        tab.addEventListener("click", () => switchView(tab.dataset.view));
+        tab.addEventListener("keydown", event => {
+          if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+          event.preventDefault();
+          switchView(event.key === "ArrowRight" ? "library" : "simulator");
+          document.querySelector(`.main-tab[data-view="${state.view}"]`)?.focus();
+        });
+      });
+
+      document.getElementById("addTemplateButton").addEventListener("click", event => {
+        openTemplateModal(state.templateCategory === "all" ? "number-theory" : state.templateCategory, event.currentTarget);
+      });
+
+      document.getElementById("themeToggle").addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        writeStorage("algo-toolbox-theme", next);
+      });
+
+      document.querySelectorAll("[data-close-modal]").forEach(button => {
+        button.addEventListener("click", () => {
+          const modal = document.getElementById(button.dataset.closeModal);
+          if (modal) closeModal(modal);
+        });
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        if (!templateModal.hidden) closeModal(templateModal);
+        else if (!infoModal.hidden) closeModal(infoModal);
+      });
+
+      const extensionExample = `// 在页面脚本末尾注册一个新算法
+window.AlgoToolbox.registerAlgorithm({
+  id: "prefix-sum",
+  category: "dp",
+  name: "前缀和区间查询",
+  symbol: "PS",
+  summary: "返回闭区间 [l, r] 的元素和。",
+  complexity: "O(n) / O(1)",
+  params: [
+    { id: "array", label: "数组", type: "textarea",
+      defaultValue: "1 2 3 4 5", full: true },
+    { id: "left", label: "左端点 l", type: "number",
+      defaultValue: "2" },
+    { id: "right", label: "右端点 r", type: "number",
+      defaultValue: "4" }
+  ],
+  run({ array, left, right }) {
+    const a = array.trim().split(/\\s+/).map(Number);
+    const l = Number(left), r = Number(right);
+    const sum = a.slice(l - 1, r).reduce((x, y) => x + y, 0);
+    return { headline: "区间和 = " + sum };
+  }
+});`;
+
+      document.getElementById("extensionExample").innerHTML = highlightCpp(extensionExample);
+      document.getElementById("showExtensionInfo").addEventListener("click", event => {
+        openModal(infoModal, event.currentTarget);
+      });
+
+      function initializeThemeIcon() {
+        const icon = document.getElementById("themeIcon");
+        const isDark = document.documentElement.dataset.theme === "dark";
+        icon.innerHTML = isDark
+          ? `<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>`
+          : `<path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"></path>`;
+      }
+
+      const api = {
+        registerAlgorithm(config) {
+          if (!config || typeof config !== "object") throw new Error("算法配置必须是对象。");
+          const required = ["id", "category", "name", "params", "run"];
+          required.forEach(key => {
+            if (!config[key]) throw new Error(`算法配置缺少字段：${key}`);
+          });
+          if (!CATEGORY_MAP.has(config.category)) throw new Error(`未知分类：${config.category}`);
+          if (ALGORITHMS.some(algorithm => algorithm.id === config.id)) throw new Error(`算法 id 已存在：${config.id}`);
+          if (!Array.isArray(config.params) || typeof config.run !== "function") throw new Error("params 必须是数组，run 必须是函数。");
+          const algorithm = {
+            symbol: config.symbol || "NEW",
+            summary: config.summary || "本地注册算法",
+            complexity: config.complexity || "—",
+            ...config
+          };
+          ALGORITHMS.push(algorithm);
+          state.selectedAlgorithmId = algorithm.id;
+          renderAlgorithmFilters();
+          renderAlgorithmList();
+          renderWorkbench();
+          return algorithm;
+        },
+        registerTemplate(config) {
+          if (!config || !config.name || !config.code || !CATEGORY_MAP.has(config.category)) {
+            throw new Error("模板至少需要有效的 category、name 和 code。");
+          }
+          const template = {
+            id: config.id || `runtime-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            summary: config.summary || "运行时注册模板",
+            complexity: config.complexity || "",
+            tags: Array.isArray(config.tags) ? config.tags : [],
+            ...config
+          };
+          TEMPLATES.push(template);
+          BUILTIN_TEMPLATE_IDS.add(template.id);
+          if (state.view === "library") renderTemplates();
+          return template;
+        },
+        get algorithms() { return ALGORITHMS.slice(); },
+        get templates() { return getTemplates(); }
+      };
+      window.AlgoToolbox = api;
+
+      initializeThemeIcon();
+      renderAlgorithmFilters();
+      renderAlgorithmList();
+      renderWorkbench();
+      renderTemplates();
+      switchView("simulator");
+    })();
+  </script>
+</body>
+</html>
